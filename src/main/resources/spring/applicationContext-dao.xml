@@ -13,7 +13,16 @@
            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 
-	<context:property-placeholder location="classpath:conf.properties"/>
+	<!--<context:property-placeholder location="classpath:conf.properties"/>-->
+
+	<bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:conf.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8" />
+	</bean>
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="${jdbc.driver}"/>
 		<property name="jdbcUrl" value="${jdbc.url}"/>
