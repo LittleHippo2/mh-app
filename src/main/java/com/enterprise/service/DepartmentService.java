@@ -1,8 +1,9 @@
 package com.enterprise.service;
 
 import com.enterprise.entity.ResultMap;
+import com.enterprise.entity.department.DepartmentPo;
 
-public interface DepartmentService {
+public interface DepartmentService extends Services<DepartmentPo> {
 
-    ResultMap syncDeptAndUser(String token);
+    ResultMap syncDeptAndUser(String token, Long starttime, String department) throws Exception;
 }

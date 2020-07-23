@@ -40,7 +40,16 @@
 		<property name="breakAfterAcquireFailure" value="true"/>
 		<property name="testConnectionOnCheckout" value="true"/>
 	</bean>
-	
+
+	<!--&lt;!&ndash; 配置扫描器，将mybatis接口的实现加入到ioc容器中 &ndash;&gt;-->
+	<!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+		<!--&lt;!&ndash;扫描所有dao接口的实现，加入到ioc容器中 &ndash;&gt;-->
+		<!--<property name="basePackage" value="com.adtec.daily.dao"></property>-->
+		<!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />-->
+	<!--</bean>-->
+
+
+
 	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation">
 			<value>classpath:mybatis-config.xml</value>
@@ -48,6 +57,7 @@
 		<property name="mapperLocations" value="classpath*:/config/**/*.xml"/>
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
+
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>

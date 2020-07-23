@@ -19,9 +19,9 @@
 
 * 使用tomcat启动
 
-* 前端地址：http://localhost:8080
+* 前端地址：http://localhost:8205
 
-* 后端地址：http://localhost:8080/manage/user/login
+* 后端地址：http://localhost:8205/manage/user/login
 
 ## 图片示例
 

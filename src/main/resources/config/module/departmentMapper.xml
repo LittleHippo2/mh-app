@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+"-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enterprise.dao.DepartmentDao">
+	<resultMap id="DeptBaseResultMap" type="com.enterprise.entity.department.DepartmentPo">
+		<id column="dept_id" jdbcType="VARCHAR" property="deptId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+		<result column="level" jdbcType="VARCHAR" property="level" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="operator" jdbcType="VARCHAR" property="operator" />
+		<result column="operator_time" jdbcType="VARCHAR" property="operatorTime" />
+		<result column="operator_ip" jdbcType="VARCHAR" property="operatorIp" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="timestamp" jdbcType="BIGINT" property="timestamp" />
+	</resultMap>
+	<resultMap id="UserBaseResultMap" type="com.enterprise.entity.department.UserPo">
+		<id column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="username" jdbcType="VARCHAR" property="userName" />
+		<result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		<result column="mail" jdbcType="VARCHAR" property="mail" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="dep_id" jdbcType="VARCHAR" property="depId" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="operator" jdbcType="VARCHAR" property="operator" />
+		<result column="operator_time" jdbcType="VARCHAR" property="operatorTime" />
+		<result column="operator_ip" jdbcType="VARCHAR" property="operatorIp" />
+		<result column="is_manager" jdbcType="INTEGER" property="isManager" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="timestamp" jdbcType="BIGINT" property="timestamp" />
+	</resultMap>
+
+	<select id="selectDepartment" resultMap="DeptBaseResultMap">
+		SELECT * from sys_dept where 1=1 and type != 0
+		<if test="parentDeptId != null and parentDeptId != ''">
+			and parent_id = #{parentDeptId}
+		</if>
+		ORDER BY order_id
+		<if test="page !=null and page != ''">
+		limit #{page}, #{size}
+		</if>
+	</select>
+
+	<select id="selectUser" resultMap="UserBaseResultMap">
+		SELECT * from sys_user where 1=1 status != 0
+		<if test="deptId != null and deptId !=''">
+		and dep_id = #{deptId}
+		</if>
+		ORDER BY order_id
+		<if test="page !=null and page != ''">
+			limit #{page}, #{size}
+		</if>
+	</select>
+
+	<update id="updateDepartment">
+		update  sys_dept
+		  set
+			`name` = #{name},
+			parent_id = #{parentId},
+			`level` = #{level},
+			order_id = #{orderId},
+			remark = #{remark},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			operator_ip = #{operatorIp},
+			type = #{type},
+			`code` = #{code},
+			`timestamp` = #{timestamp}
+		  where
+		  	dept_id = #{deptId}
+	</update>
+
+	<update id="updateUser">
+			update  sys_user
+			set
+			username = #{userName},
+			telephone = #{telephone},
+			mail = #{mail},
+			`password` = #{password},
+			account = #{account},
+			remark = #{remark},
+			dep_id = #{depId},
+			`status` = #{status},
+			operator = #{operator},
+			operator_time = #{operatorTime},
+			operator_ip = #{operatorIp},
+			is_manager = #{isManager},
+			order_id = #{orderId},
+			`timestamp` = #{timestamp}
+			where
+			user_id = #{userId}
+	</update>
+
+	<!--<insert id="insertDepartment">-->
+		<!--INSERT INTO sys_dept-->
+			<!--(id, name, parent_id, level, order_id, remark, operator, operator_time, operator_ip, type, `code`, `timestamp`)-->
+		<!--VALUES-->
+		<!--<foreach item="item" collection="list" separator="," open="(" close=")" index="">-->
+			<!--(#{id},-->
+			<!--#{name},-->
+			<!--#{parentId},-->
+			<!--#{level},-->
+			<!--#{orderId},-->
+			<!--#{remark},-->
+			<!--#{operator},-->
+			<!--#{operatorTime},-->
+			<!--#{operatorIp},-->
+			<!--#{type},-->
+			<!--#{code},-->
+			<!--#{timestamp})-->
+		<!--</foreach>-->
+	<!--</insert>-->
+
+	<!--<insert id="insertUser">-->
+		<!--INSERT INTO sys_user-->
+			<!--(id, username, telephone, mail, `password`, account, remark, dep_id, `status`, operator, operator_time, operator_ip, is_manager, order_id, `timestamp`)-->
+		<!--VALUES-->
+		<!--<foreach item="item" collection="list" separator="," open="(" close=")" index="">-->
+			<!--(#{id},-->
+			<!--#{userName},-->
+			<!--#{telephone},-->
+			<!--#{mail},-->
+			<!--#{password},-->
+			<!--#{account},-->
+			<!--#{remark},-->
+			<!--#{depId},-->
+			<!--#{status},-->
+			<!--#{operator},-->
+			<!--#{operatorTime},-->
+			<!--#{operatorIp},-->
+			<!--#{isManager},-->
+			<!--#{orderId},-->
+			<!--#{timestamp})-->
+		<!--</foreach>-->
+
+	<!--</insert>-->
+
+	<insert id="insertDeptByOne">
+		INSERT INTO sys_dept
+			(dept_id, name, parent_id, level, order_id, remark, operator, operator_time, operator_ip, type, `code`, `timestamp`)
+		VALUES
+		(#{deptId},
+			#{name},
+			#{parentId},
+			#{level},
+			#{orderId},
+			#{remark},
+			#{operator},
+			#{operatorTime},
+			#{operatorIp},
+			#{type},
+			#{code},
+			#{timestamp})
+	</insert>
+
+	<insert id="insertUserByOne">
+		INSERT INTO sys_user
+		(user_id, username, telephone, mail, `password`, account, remark, dep_id, `status`, operator, operator_time, operator_ip, is_manager, order_id, `timestamp`)
+		VALUES
+			(#{userId},
+			#{userName},
+			#{telephone},
+			#{mail},
+			#{password},
+			#{account},
+			#{remark},
+			#{depId},
+			#{status},
+			#{operator},
+			#{operatorTime},
+			#{operatorIp},
+			#{isManager},
+			#{orderId},
+			#{timestamp})
+	</insert>
+	<select id="getTimestamp" resultType="java.lang.Long">
+		  select `timestamp` from `timestamp` ORDER BY id DESC LIMIT 1
+	</select>
+	<update id="updateTimestamp">
+		 update  `timestamp` set  `timestamp` = #{timestamp} where id = 2
+	</update>
+
+
+</mapper>

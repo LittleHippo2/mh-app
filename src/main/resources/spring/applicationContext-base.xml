@@ -7,4 +7,6 @@
 	<bean id="baseDao" class="com.enterprise.dao.BaseDao">
 		<property name="sqlSessionFactory" ref="sessionFactory"/>
 	</bean>
+
+
 </beans>
