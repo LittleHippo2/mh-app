@@ -8,7 +8,7 @@ import com.enterprise.entity.ResultMap;
 import com.enterprise.entity.department.DepartmentPo;
 import com.enterprise.entity.department.UserPo;
 import com.enterprise.service.DepartmentService;
-import com.enterprise.util.HttpUtil;
+import com.enterprise.util.HttpClientUtil;
 import com.enterprise.util.TimeUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -19,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("departmentService")
 public class DepartmentServiceImpl  extends ServersManage<DepartmentPo,DepartmentDao> implements  DepartmentService{
@@ -47,11 +45,11 @@ public class DepartmentServiceImpl  extends ServersManage<DepartmentPo,Departmen
      */
     @Override
     @Transactional
-    public ResultMap syncDeptAndUser(String token, Long starttime, String department) throws Exception {
+    public ResultMap syncDeptAndUser(String token) throws Exception {
 
         logger.info("*************************************************************************************************************");
-        starttime = dao.getTimestamp();
-        logger.info("token："+token+", starttime: "+ starttime+", department: "+ department );
+        Long starttime = dao.getTimestamp();
+        logger.info("token："+token);
         ResultMap resultMap = new ResultMap();
         //方法开始时间
         String startTime = TimeUtils.getNow();
@@ -59,17 +57,18 @@ public class DepartmentServiceImpl  extends ServersManage<DepartmentPo,Departmen
         resultMap.setStartTime(startTime);
         long startTime1 = System.currentTimeMillis();
 
-        Map<String, Object> map = new HashMap<>();
+//        Map<String, Object> map = new HashMap<>();
+//
+//        map.put("starttime", starttime);
+//        map.put("department", department);
+//        map.put("access_token", token);
 
-        map.put("starttime", starttime);
-        map.put("department", department);
-        map.put("access_token", token);
-
-        String url = apiIp+apiSyncDept;
+        String url = apiIp+apiSyncDept+"?starttime="+starttime+"&department=root"+"&access_token="+token;
         logger.info("请求的接口为："+url);
         logger.info("请求方式：GET");
         long apiStartTime1 = System.currentTimeMillis();
-        String obj = HttpUtil.get(url, map, 3000, 3000);
+       // String obj = HttpUtil.get(url, map, 3000, 3000);
+        String obj = HttpClientUtil.httpGet(url);
         logger.info(obj);
         long apiEndTime1 = System.currentTimeMillis();
         String apiCallTime = (apiEndTime1-apiStartTime1)+"ms";

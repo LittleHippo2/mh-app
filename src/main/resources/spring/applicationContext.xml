@@ -17,5 +17,6 @@
 	<import resource="classpath*:spring/applicationContext-cache.xml"/>
 	<import resource="classpath*:spring/applicationContext-dao.xml"/>
 	<import resource="classpath*:spring/applicationContext-front.xml"/>
+	<import resource="classpath*:spring/applicationContext-task.xml"/>
 
 </beans>

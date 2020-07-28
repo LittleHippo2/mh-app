@@ -5,5 +5,5 @@ import com.enterprise.entity.department.DepartmentPo;
 
 public interface DepartmentService extends Services<DepartmentPo> {
 
-    ResultMap syncDeptAndUser(String token, Long starttime, String department) throws Exception;
+    ResultMap syncDeptAndUser(String token) throws Exception;
 }

@@ -18,9 +18,7 @@ public class DepartmentController {
 
     @RequestMapping("/sync")
     @ResponseBody
-    public ResultMap syncDeptAndUser(@RequestParam(value = "token")String token,
-                                     @RequestParam(value = "starttime")Long starttime,
-                                     @RequestParam(value = "department" , required = false)String department) throws Exception {
-        return departmentService.syncDeptAndUser(token, starttime, department);
+    public ResultMap syncDeptAndUser(@RequestParam(value = "token")String token) throws Exception {
+        return departmentService.syncDeptAndUser(token);
     }
 }
