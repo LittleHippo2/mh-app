@@ -1,6 +1,7 @@
 package com.enterprise.dao;
 
 import com.enterprise.entity.department.DepartmentPo;
+import com.enterprise.entity.department.PageUtils;
 import com.enterprise.entity.department.UserPo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,15 @@ import java.util.List;
 
 public interface DepartmentDao extends DaoManage<DepartmentPo> {
 
-    List<DepartmentPo> selectDepartment(@Param("page") Integer page, @Param("size") Integer size, @Param("parentDeptId") String parentDeptId);
+    List<DepartmentPo> selectDepartment(PageUtils pageUtils);
 
-    List<UserPo> selectUser(@Param("page") Integer page, @Param("size") Integer size, @Param("deptId") String deptId);
+    Integer countDept(String fatherId);
+
+    Integer countUser(String deptId);
+
+    List<UserPo> selectUser(PageUtils pageUtils);
+
+    List<DepartmentPo> selectDeptList();
 
     void updateDepartment(DepartmentPo departmentPo);
 

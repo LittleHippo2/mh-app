@@ -3,6 +3,7 @@ package com.enterprise.dao.impl;
 import com.enterprise.dao.BaseDao;
 import com.enterprise.dao.DepartmentDao;
 import com.enterprise.entity.department.DepartmentPo;
+import com.enterprise.entity.department.PageUtils;
 import com.enterprise.entity.department.UserPo;
 import com.enterprise.entity.page.PageModel;
 import org.springframework.stereotype.Repository;
@@ -22,13 +23,28 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
 
     @Override
-    public List<DepartmentPo> selectDepartment(Integer page, Integer size, String parentDeptId) {
-        return dao.selectList("selectDepartment");
+    public List<DepartmentPo> selectDepartment(PageUtils pageUtils) {
+        return dao.selectList("selectDepartment" , pageUtils);
     }
 
     @Override
-    public List<UserPo> selectUser(Integer page, Integer size, String deptId) {
-        return dao.selectList("selectUser");
+    public Integer countDept(String fatherId) {
+        return (Integer) dao.selectOne("countDept",fatherId);
+    }
+
+    @Override
+    public Integer countUser(String deptId) {
+        return (Integer) dao.selectOne("countUser", deptId);
+    }
+
+    @Override
+    public List<UserPo> selectUser(PageUtils pageUtils) {
+        return dao.selectList("selectUser", pageUtils);
+    }
+
+    @Override
+    public List<DepartmentPo> selectDeptList() {
+        return dao.selectList("selectDeptList");
     }
 
     @Override
@@ -40,16 +56,6 @@ public class DepartmentDaoImpl implements DepartmentDao {
     public void updateUser(UserPo userPo) {
         dao.insert("updateUser", userPo);
     }
-//
-//    @Override
-//    public Integer insertDepartment(List<DepartmentPo> list) {
-//        return dao.insertDepartment(list);
-//    }
-//
-//    @Override
-//    public Integer insertUser(List<UserPo> list) {
-//        return dao.insertUser(list);
-//    }
 
     @Override
     public void insertDeptByOne(DepartmentPo departmentPo) {

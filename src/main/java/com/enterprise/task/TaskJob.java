@@ -27,16 +27,16 @@ public class TaskJob {
     @Scheduled(cron = "0 0/5 * * * ?")
     public void job(){
 
-        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
-
-        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
-        String token = result.getString("access_token");
-
-        try {
-            departmentService.syncDeptAndUser(token);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+//
+//        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+//        String token = result.getString("access_token");
+//
+//        try {
+//            departmentService.syncDeptAndUser(token);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
     }

@@ -29,17 +29,15 @@ public class SearchReceive implements ApplicationListener<ContextRefreshedEvent>
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (contextRefreshedEvent.getApplicationContext().getParent() == null) {//保证只执行一次
             ResultMap resultMap = tokenService.getAccessToken(appid, secret);
-
-            JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
-            String token = result.getString("access_token");
-
-            try {
-                departmentService.syncDeptAndUser(token);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
+//            if(resultMap.getData().toString() != null){
+//                JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+//                String token = result.getString("access_token");
+//                try {
+//                    departmentService.syncDeptAndUser(token);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
 
     }

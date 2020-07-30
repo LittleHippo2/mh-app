@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class ResultMap implements Serializable {
 
+
     //方法开始时间
     private String startTime;
 
