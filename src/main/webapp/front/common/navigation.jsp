@@ -66,6 +66,9 @@
             <li>
                 <a href="<%=path%>/contact">联系我们</a>
             </li>
+            <li>
+                <a href="<%=path%>/api">接口集成</a>
+            </li>
         </ul>
     </div>
 </div>

@@ -326,7 +326,7 @@ public class HttpUtil {
         return response.getBody();
     }
 
-    public static String pksGet(String urlAddr, Map<String, Object> paramsMap) throws Exception {
+    public static String get(String urlAddr, Map<String, Object> paramsMap) throws Exception {
         long begin = System.currentTimeMillis();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -352,7 +352,7 @@ public class HttpUtil {
         return response.getBody();
     }
 
-    public static String pksPost(String urlAddr, Map<String, Object> paramsMap, String contentType) throws Exception {
+    public static String post(String urlAddr, Map<String, Object> paramsMap, String contentType) throws Exception {
         long begin = System.currentTimeMillis();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -379,7 +379,7 @@ public class HttpUtil {
         return "fail";
 
     }
-    public static String pksPost(String urlAddr, String params, String contentType) throws Exception {
+    public static String post(String urlAddr, String params, String contentType) throws Exception {
         long begin = System.currentTimeMillis();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -397,7 +397,7 @@ public class HttpUtil {
 
 
     }
-    public static String pksGet(String urlAddr, String paramsMap,String contentType) throws Exception {
+    public static String get(String urlAddr, String paramsMap,String contentType) throws Exception {
         long begin = System.currentTimeMillis();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -448,28 +448,36 @@ public class HttpUtil {
         // pksPost("","");
 
 
-        JSONObject object = new JSONObject();
+//        JSONObject object = new JSONObject();
+//
+//        object.put("organdId", "111");
+//        object.put("code", "1111");
+//        object.put("organName","测试");
+//        object.put("fatherId", "root");
+//        object.put("orderId", 1000);
+//        object.put("isdelete", 0);
+//        object.put("isTemporary", 0);
+//        //object.put("timestamp", new Timestamp((org.getEditDate()).getTime()));
+//        object.put("timestamp", System.currentTimeMillis());
+//
+//        String data = object.toJSONString();
+//        System.out.println(data);
+//        String res = HttpUtil.pksPost("http://172.16.5.200:10005/api/org/department?access_token=7694304a-98cd-4886-abcf-d77389f42bce",data,"");
+//        System.out.println(res);
 
-        object.put("organdId", "111");
-        object.put("code", "1111");
-        object.put("organName","测试");
-        object.put("fatherId", "root");
-        object.put("orderId", 1000);
-        object.put("isdelete", 0);
-        object.put("isTemporary", 0);
-        //object.put("timestamp", new Timestamp((org.getEditDate()).getTime()));
-        object.put("timestamp", System.currentTimeMillis());
+        Map inParam = new HashMap<String,Object>();
+        inParam.put("client_id","base.csse.deskto");
+        inParam.put("client_secret","a75b5772-f005-4dbe-b5e0-9ac7793533cc");
+        inParam.put("grant_type","client_credentials");//目前grant_type 仅支持 client_credentials
 
-        String data = object.toJSONString();
-        System.out.println(data);
-        String res = HttpUtil.pksPost("http://172.16.5.200:10005/api/org/department?access_token=7694304a-98cd-4886-abcf-d77389f42bce",data,"");
-        System.out.println(res);
+            String request = post("http://192.168.42.11:10005/api/uaa/oauth/token",inParam,"application/x-www-form-urlencoded;charset=UTF-8");
+        System.out.printf(request);
     }
 
     /**
      * http post request
      */
-    public static String post(String urlAddr, String paramsStr,String contentType) throws Exception {
+    /*public static String post(String urlAddr, String paramsStr,String contentType) throws Exception {
 
         long begin = System.currentTimeMillis();
         String line;
@@ -487,7 +495,7 @@ public class HttpUtil {
             conn.setRequestProperty("Content-Type", contentType);
 
             // 设置连接超时时间
-            /*conn.setConnectTimeout(connectTimeout);*/
+            *//*conn.setConnectTimeout(connectTimeout);*//*
             // 设置是否向HttpURLConnection输出，因为这个是post请求，参数要放在http正文内，
             // 因此需要设为true, 默认情况下是false
             conn.setDoOutput(true);
@@ -537,7 +545,7 @@ public class HttpUtil {
         long end = System.currentTimeMillis();
         time = (end - begin) + "ms";
         return result.toString();
-    }
+    }*/
 
 
 }

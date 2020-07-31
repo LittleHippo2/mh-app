@@ -100,6 +100,9 @@
 
     <script type="text/javascript" src="<%=path %>/resource/js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="<%=path %>/resource/js/jquery.tab.js"></script>
+    <!-- 接口测试引入-->
+    <script type="text/javascript" src="<%=path %>/resource/js/show.js"></script>
+    <script type="text/javascript" src="<%=path %>/resource/js/request.js"></script>
 
     <%--layui--%>
     <link rel="stylesheet" href="<%=path %>/resource/layui/css/layui.css">
