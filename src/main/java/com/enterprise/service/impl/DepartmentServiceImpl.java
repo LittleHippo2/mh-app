@@ -38,6 +38,11 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
     @Value("#{config['api.sync.dept']}")
     private String apiSyncDept;
 
+    @Value("#{config['api.get.deptList']}")
+    private String apiCsseDeptList;
+
+
+
 
     @Resource(name = "departmentDao")
     public void setDao(DepartmentDao departmentDao) {
@@ -202,6 +207,8 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
             deptTree.setId(a.getDeptId());
             deptTree.setTitle(a.getName());
             deptTree.setChildren(null);
+
+
             if (a.getDeptId().equals("root")) {
                 rootList.add(deptTree);
             } else {
@@ -250,6 +257,114 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         resultMap.setCount(dao.countUser(deptId));
         return resultMap;
     }
+
+    /**
+     * 全量同步
+     */
+
+    @Override
+    public ResultMap selectCsseDeptList(String token,  String fatherId, String invalid) {
+
+        ResultMap resultMap = new ResultMap();
+        logger.info("********************************************************获取部门列表开始**********************************************************");
+        String csseUrl =apiCsseDeptList.replace("{departmentid}", fatherId);
+        String url;
+        if (invalid  != null){
+            //包含禁用数据
+            url  = apiIp+csseUrl+"?access_token="+token+"&sublevel&invalid";
+        }else{
+            url  = apiIp+csseUrl+"?access_token="+token+"&sublevel";
+        }
+        logger.info("请求的接口为："+url);
+        logger.info("请求类型：GET");
+        String obj = HttpClientUtil.httpGet(url);
+
+        JSONArray jsonArray = JSONObject.parseArray(obj);
+
+        List<DeptTree> rootList = new ArrayList<>();//根节点
+        List<DeptTree> bodyList = new ArrayList<>();//子节点
+
+        jsonArray.stream().forEach(a -> {
+            DeptTree deptTree = new DeptTree();
+            deptTree.setPid(((JSONObject) a).getString("fatherId"));
+            deptTree.setId(((JSONObject) a).getString("organId"));
+            deptTree.setTitle(((JSONObject) a).getString("organName"));
+            deptTree.setChildren(null);
+
+            if (((JSONObject) a).getString("organId").equals("root")) {
+                rootList.add(deptTree);
+            } else {
+                bodyList.add(deptTree);
+            }
+        });
+        TreeToolUtils utils = new TreeToolUtils(rootList, bodyList);
+        List<DeptTree> result = utils.getTree();
+        resultMap.setData(result);
+
+        logger.info("********************************************************获取部门列表结束**********************************************************");
+        return resultMap;
+    }
+
+    @Override
+    public ResultMap selectCsseDeptListInfo(Integer page, Integer limit,String token, String fatherId, String invalid) {
+        logger.info("********************************************************获取部门列表信息开始**********************************************************");
+        String startTime = TimeUtils.getNow();
+        ResultMap resultMap = new ResultMap();
+        resultMap.setStartTime(startTime);
+        String csseUrl =apiCsseDeptList.replace("{departmentid}", fatherId);
+        String url;
+        if (invalid  != null){
+            //包含禁用数据
+            url  = apiIp+csseUrl+"?access_token="+token+"&sublevel&invalid";
+        }else{
+            url  = apiIp+csseUrl+"?access_token="+token+"&sublevel";
+        }
+        logger.info("请求的接口为："+url);
+        logger.info("请求类型：GET");
+        long apiStartTime = System.currentTimeMillis();
+        String obj = HttpClientUtil.httpGet(url);
+        long apiEndTime = System.currentTimeMillis();
+        resultMap.setApiCallTime((apiEndTime-apiStartTime)+"ms");
+        JSONArray jsonArray = JSONObject.parseArray(obj);
+        int count = jsonArray.size();
+        page = (page-1)*limit;
+        List<DepartmentPo> list = new ArrayList<>();
+        jsonArray.stream().skip((long)page).limit(limit).forEach( a -> {
+            DepartmentPo departmentPo = new DepartmentPo();
+            departmentPo.setDeptId(((JSONObject) a).getString("organId"));
+            departmentPo.setName(((JSONObject) a).getString("organName"));
+            departmentPo.setParentId(((JSONObject) a).getString("fatherId"));
+            departmentPo.setLevel(((JSONObject) a).getString("p"));
+            departmentPo.setOrderId(((JSONObject) a).getInteger("orderId"));
+            departmentPo.setRemark("1");
+            departmentPo.setOperator("1");
+            departmentPo.setOperatorIp("1");
+            departmentPo.setOperatorTime(LocalDate.now() + "");
+            //departmentPo.setType(((JSONObject) a).getInteger("type"));
+            departmentPo.setCode(((JSONObject) a).getString("code"));
+            departmentPo.setTimestamp(((JSONObject) a).getLong("timestamp"));
+            list.add(departmentPo);
+        });
+        resultMap.setCount(count);
+        resultMap.setData(list);
+        String endTime = TimeUtils.getNow();
+        resultMap.setEndTime(endTime);
+        logger.info("********************************************************获取部门列表信息结束**********************************************************");
+        return resultMap;
+    }
+
+    @Override
+    public ResultMap selectDeptByDeptId(String token, String deptId) {
+
+        ResultMap resultMap = new ResultMap();
+        logger.info("********************************************************获取部门详细信息开始**********************************************************");
+
+
+
+        logger.info("********************************************************获取部门详细信息结束**********************************************************");
+        return null;
+    }
+
 
 
 
