@@ -75,9 +75,10 @@ public class DepartmentController {
 
     @RequestMapping("/selectDeptByDeptId")
     @ResponseBody
-    public ResultMap selectDeptByDeptId( @RequestParam(value = "token")String token,
+    public ResultMap selectDeptByDeptId(HttpServletRequest request,
+                                        @RequestParam(value = "token")String token,
                                          @RequestParam(value = "deptId")String deptId){
-        return departmentService.selectDeptByDeptId(token, deptId);
+        return departmentService.selectDeptByDeptId(request, token, deptId);
     }
 
     /**

@@ -104,16 +104,17 @@
             var data = obj.data;
             console.log(data)
             if(obj.event === 'detail'){
-                layer.msg('ID：'+ data.deptId + ' 的查看操作');
+                $.ajax({
+                    url:"/manage/department/selectDeptByDeptId",
+                    data:{
+                        token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
+                        deptId:data.deptId,
+                    },
+                    success:function(res){
+                        window.location.href="/manage/csseDepartment/csseDepartmentInfo.jsp";
+                    }
+                })
             }
-            // else if(obj.event === 'del'){
-            //     layer.confirm('真的删除行么', function(index){
-            //         obj.del();
-            //         layer.close(index);
-            //     });
-            // } else if(obj.event === 'edit'){
-            //     layer.alert('编辑行：<br>'+ JSON.stringify(data))
-            // }
         });
         //监听右侧工具条
         table.on('tool(demo)', function(obj){

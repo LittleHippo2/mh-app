@@ -19,7 +19,7 @@ public interface DepartmentService extends Services<DepartmentPo> {
 
     ResultMap selectCsseDeptListInfo(Integer page, Integer limit, String token, String fatherId,String invalid);
 
-    ResultMap selectDeptByDeptId(String token, String deptId);
+    ResultMap selectDeptByDeptId(HttpServletRequest request,String token, String deptId);
 
     ResultMap selectCsseUserList(Integer page, Integer limit, String token, String deptId);
 

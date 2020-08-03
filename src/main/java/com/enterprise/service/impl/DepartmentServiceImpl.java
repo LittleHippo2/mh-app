@@ -358,7 +358,7 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
     }
 
     @Override
-    public ResultMap selectDeptByDeptId(String token, String deptId) {
+    public ResultMap selectDeptByDeptId(HttpServletRequest request,String token, String deptId) {
 
         ResultMap resultMap = new ResultMap();
         logger.info("********************************************************获取部门详细信息开始**********************************************************");
@@ -382,6 +382,9 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         departmentPo.setName(jsonObject.getString("organName"));
         departmentPo.setParentId(jsonObject.getString("fatherId"));
         departmentPo.setCode(jsonObject.getString("code"));
+
+        HttpSession session = request.getSession();
+        session.setAttribute("deptInfo", JSONObject.toJSON(departmentPo));
 
         resultMap.setData(departmentPo);
         String endTime = TimeUtils.getNow();
