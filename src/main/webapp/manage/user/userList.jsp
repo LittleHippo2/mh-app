@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="应用维护组织机构列表" %>
+<%@ page info="应用维护人员列表" %>
 
 <style>
     table {
@@ -34,11 +34,11 @@
         </div>
     </div>
 </div>
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <button class="layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="getCheckData">增量同步</button>
-    </div>
-</script>
+<%--<script type="text/html" id="toolbarDemo">--%>
+    <%--<div class="layui-btn-container">--%>
+        <%--<button class="layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="getCheckData">增量同步</button>--%>
+    <%--</div>--%>
+<%--</script>--%>
 <script>
     layui.use(['tree', 'util', 'table'], function () {
         var tree = layui.tree
@@ -54,10 +54,10 @@
             table.render({
                 elem: '#demo'
                 , height: 'full-200'
-                , url: '/manage/department/selectDeptList' //数据接口
-                ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , url: '/manage/department/selectUserList' //数据接口
+                ,toolbar: true //开启头部工具栏，并为其绑定左侧模板
                 , where: {
-                    fatherId: id
+                    deptId: id
                 }
                 , parseData: function (res) {
                     return {
@@ -68,11 +68,11 @@
                 }
                 , page: true
                 , cols: [[ //表头
-                    {field: 'index', title: '序号', width: 300, type: 'numbers'}
-                    , {field: 'deptId', title: 'ID', width: 300, sort: true}
-                    , {field: 'name', title: '部门名称', width: 300}
-                    , {field: 'code', title: '部门简称', width: 300, sort: true}
-
+                    {field: 'index', title: '序号', width: 150, type: 'numbers'}
+                    , {field: 'userId', title: 'ID', width: 300, sort: true}
+                    , {field: 'userName', title: '用户名称', width: 300}
+                    , {field: 'account', title: '账号', width: 300, sort: true}
+                    , {field: 'depId', title: '所在部门ID', width: 300, sort: true}
                 ]]
                 , response: {
                     statusName: 'code'

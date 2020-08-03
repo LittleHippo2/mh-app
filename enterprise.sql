@@ -239,9 +239,10 @@ INSERT INTO `t_menu` VALUES (115, 1, '/manage/backups/backupsList', '数据备�
 INSERT INTO `t_menu` VALUES (116, 6, '/manage/contact/selectList', '联系我们', 7, 'page', NULL);
 INSERT INTO `t_menu` VALUES (117, 6, '/manage/about/selectList', '关于我们', 8, 'page', NULL);
 INSERT INTO `t_menu` VALUES (118, 6, '/manage/service/selectList', '服务领域', 9, 'page', NULL);
-INSERT INTO `t_menu` VALUES (119, 6, '/manage/department/selectList', '应用维护组织机构', 10, 'page', NULL);
-INSERT INTO `t_menu` VALUES (120, 6, '/manage/department/csse/selectList', '平台维护组织机构', 11, 'page', NULL);
-
+INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (119, 6, '/manage/department/selectList', '应用维护组织机构', 10, 'page', NULL);
+INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (120, 6, '/manage/department/csse/selectList', '平台维护组织机构', 12, 'page', NULL);
+INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (121, 6, '/manage/department/user/selectList', '应用维护人员信息', 11, 'page', NULL);
+INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (122, 6, '/manage/department/csse/user/selectList', '平台维护人员信息', 13, 'page', NULL);
 -- ----------------------------
 -- Table structure for t_messages
 -- ----------------------------

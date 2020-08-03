@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="平台维护组织机构" %>
+<%@ page info="平台维护组织机构列表" %>
 
 <style>
     table {
@@ -17,9 +17,6 @@
     }
 
 </style>
-<link rel="stylesheet" href="../../resource/layui/css/layui.css">
-<script src="../../resource/layui/layui.js"></script>
-
 
 <div class="layui-row" >
     <div class="layui-col-md3">
@@ -63,7 +60,7 @@
                 , url: '/manage/department/csse/selectDeptListInfo' //数据接口
                 ,toolbar: true //开启头部工具栏，并为其绑定左侧模板
                 , where: {
-                    token:"624c60ff-154b-4148-9881-3dfb927e8275",
+                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
                     fatherId: id
                 }
                 , parseData: function (res) {
@@ -139,7 +136,7 @@
             $.ajax({
                 url: "/manage/department/csse/selectDeptList",
                 data:{
-                    token:"624c60ff-154b-4148-9881-3dfb927e8275"
+                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea"
                 }
                 ,success: function (res) {
                     tree.render({
