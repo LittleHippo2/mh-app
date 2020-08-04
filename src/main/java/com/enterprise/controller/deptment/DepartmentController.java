@@ -1,8 +1,11 @@
 package com.enterprise.controller.deptment;
 
+import com.alibaba.fastjson.JSONObject;
 import com.enterprise.entity.ResultMap;
 import com.enterprise.service.DepartmentService;
 import com.enterprise.util.PlatFormUtil;
+import com.enterprise.service.impl.TokenServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,15 @@ public class DepartmentController {
 
     @Resource
     private DepartmentService departmentService;
+
+    @Resource
+    private TokenServiceImpl tokenService;
+
+    @Value("#{config['api.appid']}")
+    private String appid;
+
+    @Value("#{config['api.secret']}")
+    private String secret;
 
     /**
      * 增量同步
@@ -85,6 +97,10 @@ public class DepartmentController {
     public ResultMap selectDeptByDeptId(HttpServletRequest request,
                                         @RequestParam(value = "token")String token,
                                          @RequestParam(value = "deptId")String deptId){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        token = result.getString("access_token");
         return departmentService.selectDeptByDeptId(request, token, deptId);
     }
 
@@ -98,6 +114,10 @@ public class DepartmentController {
     public ResultMap selectCsseDeptList(@RequestParam(value = "token")String token,
                                         @RequestParam(value = "fatherId", defaultValue = "-1")String fatherId,
                                         @RequestParam(value = "invalid", required = false)String invalid){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        token = result.getString("access_token");
         return departmentService.selectCsseDeptList(token, fatherId, invalid);
     }
 
@@ -108,6 +128,10 @@ public class DepartmentController {
                                         @RequestParam(value = "token")String token,
                                         @RequestParam(value = "fatherId", defaultValue = "-1")String fatherId,
                                         @RequestParam(value = "invalid", required = false)String invalid){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        token = result.getString("access_token");
         return departmentService.selectCsseDeptListInfo(page, limit, token, fatherId, invalid);
     }
 
@@ -117,6 +141,10 @@ public class DepartmentController {
                                         @RequestParam(value = "limit", defaultValue = "10")Integer limit,
                                         @RequestParam(value = "token")String token,
                                         @RequestParam(value = "deptId", defaultValue = "root")String deptId){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        token = result.getString("access_token");
         return departmentService.selectCsseUserList(page, limit, token, deptId);
     }
 
@@ -126,6 +154,10 @@ public class DepartmentController {
                                     @RequestParam(value = "token")String token,
                                     @RequestParam(value = "userId",required = false)String userId,
                                     @RequestParam(value = "account",required = false)String account){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
+
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        token = result.getString("access_token");
         return departmentService.selectCsseUserInfo(request, token, userId, account);
     }
 
