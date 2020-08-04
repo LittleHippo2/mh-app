@@ -30,6 +30,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service("departmentService")
+@Transactional("transactionManager")
 public class DepartmentServiceImpl extends ServersManage<DepartmentPo, DepartmentDao> implements DepartmentService {
 
     private static final Logger logger = LogManager.getLogger(DepartmentServiceImpl.class);
@@ -67,10 +68,10 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
      * @return
      */
     @Override
-    @Transactional
+    @Transactional("transactionManager")
     public ResultMap syncDeptAndUser(String token) throws Exception {
 
-        logger.info("******************************************************************************************************************************************************************");
+        logger.info("******************************************************************************************增量同步开始************************************************************************");
         Long starttime = dao.getTimestamp();
         logger.info("token：" + token);
         ResultMap resultMap = new ResultMap();
@@ -79,12 +80,6 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         logger.debug("方法开始时间为：" + startTime);
         resultMap.setStartTime(startTime);
         long startTime1 = System.currentTimeMillis();
-
-//        Map<String, Object> map = new HashMap<>();
-//
-//        map.put("starttime", starttime);
-//        map.put("department", department);
-//        map.put("access_token", token);
 
         String url = apiIp + apiSyncDept + "?starttime=" + starttime + "&department=&access_token=" + token;
         logger.info("请求的接口为：" + url);
@@ -102,12 +97,13 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         logger.debug("同步组织机构和用户接口总耗时：" + apiCallTime);
 
         //将同步过来的数据插入本地数据库
-        try {
-            insertTable(obj, resultMap, starttime);
-        } catch (Exception e) {
-            logger.error(e);
-            dao.updateTimestamp((long) 1);
-        }
+        insertTable(obj, resultMap, starttime);
+//        try {
+//            insertTable(obj, resultMap, starttime);
+//        } catch (Exception e) {
+//            logger.error(e);
+//            dao.updateTimestamp((long) 1);
+//        }
 
 
         //方法结束时间
@@ -119,10 +115,11 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         resultMap.setTimeConsuming(timeConsuming);
 
         logger.debug("方法总耗时：" + timeConsuming);
-        logger.info("*******************************************************************************************************************************************************************");
+        logger.info("*******************************************************************************************增量同步结束************************************************************************");
         return resultMap;
     }
 
+    @Transactional("transactionManager")
     public ResultMap insertTable(String obj, ResultMap resultMap, long starttime) {
 
         String resultCode = JSONObject.parseObject(obj).getString("rsltmsg");
@@ -130,10 +127,8 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
             JSONArray org = JSONObject.parseObject(obj).getJSONArray("org");
             JSONArray user = JSONObject.parseObject(obj).getJSONArray("user");
             if (org.size() == 0 && user.size() == 0) {
-                resultMap.setData("增量同步数据为空，请检查时间戳是否是10位或者部门id是否正确,如果都正确，可能此时间之后或者此部门id下没有新增或修改过后的数据。");
+                resultMap.setData("同步完成，增量同步数据为空，上次同步时间之后没有新增或修改过的数据。");
             } else {
-                List<DepartmentPo> deptList = new ArrayList<>();
-                List<UserPo> userList = new ArrayList<>();
                 if (org.size() != 0) {
                     //使用java8 forEach 的并联流方法，并且加上lambda 表达式的写法，可以提高遍历效率，并且代码的可读性提高
                     org.parallelStream().forEach(a -> {
@@ -195,6 +190,7 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
                         }
                     });
                 }
+                resultMap.setData("同步完成！共同步组织机构数据："+org.size()+"条。同步人员信息："+user.size()+"条。");
             }
         } else {
             resultCode = JSONObject.parseObject(obj).getString("error");
@@ -474,5 +470,13 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         return resultMap;
     }
 
+    @Override
+    public void truncateTable() {
+        dao.truncateTable();
+    }
 
+    @Override
+    public void updateTime(Long time) {
+        dao.updateTimestamp(time);
+    }
 }

@@ -42,6 +42,8 @@ public interface DepartmentDao extends DaoManage<DepartmentPo> {
     //修改时间戳
     void updateTimestamp(@Param("timestamp") Long timestamp);
 
+    void truncateTable();
+
 
 
 }

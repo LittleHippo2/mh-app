@@ -87,10 +87,12 @@
             $.ajax({
                 url:"/manage/department/sync",
                 data:{
-                    token:"3ba736c3-dc81-439b-a110-84735d41094a"
+                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea"
                 },
                 success:function (res) {
                     console.log(res)
+                    renderTable();
+                    alert(res.data);
                 }
             })
         }
@@ -100,13 +102,10 @@
             // var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'getCheckData':
-                    // var data = checkStatus.data;
                     syncData()
-                    // layer.alert(JSON.stringify(data));
                     break;
             };
         });
-
 
         $(function () {
             $.ajax({
@@ -133,7 +132,6 @@
                 }
             })
         })
-
     });
 
 

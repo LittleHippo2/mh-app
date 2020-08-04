@@ -24,4 +24,8 @@ public interface DepartmentService extends Services<DepartmentPo> {
     ResultMap selectCsseUserList(Integer page, Integer limit, String token, String deptId);
 
     ResultMap selectCsseUserInfo(HttpServletRequest request, String token, String userId, String account);
+
+    void truncateTable();
+
+    void updateTime(Long time);
 }

@@ -11,62 +11,44 @@
 
     <form class="layui-form" action="" lay-filter="userForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">用户名称</label>
+            <label class="layui-form-label" style="width: 100px">用户名称</label>
             <div class="layui-input-block">
                 <input type="text" name="userName" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">用户id</label>
+            <label class="layui-form-label" style="width: 100px">用户id</label>
             <div class="layui-input-block">
                 <input type="text" name="userId" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">账号</label>
+            <label class="layui-form-label" style="width: 100px">账号</label>
             <div class="layui-input-block">
                 <input type="text" name="account" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">部门id</label>
+            <label class="layui-form-label" style="width: 100px">部门id</label>
             <div class="layui-input-block">
                 <input type="text" name="depId" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>
             </div>
         </div>
+        <%--<div class="layui-form-item">--%>
+            <%--<label class="layui-form-label" style="width: 100px">权限</label>--%>
+            <%--<div class="layui-input-block">--%>
+                <%--<input type="text" name="isManager" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>--%>
+            <%--</div>--%>
+        <%--</div>--%>
         <div class="layui-form-item">
-            <label class="layui-form-label">权限</label>
+            <label class="layui-form-label"  style="width: 100px">用户角色</label>
             <div class="layui-input-block">
-                <input type="text" name="isManager" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" readonly>
+                <input type="radio" name="isManager" value=0 title="普通用户" >
+                <input type="radio" name="isManager" value=1 title="安全审计员">
+                <input type="radio" name="isManager" value=2 title="安全管理员" >
+                <input type="radio" name="isManager" value=4 title="系统管理员">
             </div>
         </div>
-
-    <%--<div class="layui-form-item">--%>
-            <%--<label class="layui-form-label">复选框</label>--%>
-            <%--<div class="layui-input-block">--%>
-                <%--<input type="checkbox" name="like[write]" title="写作">--%>
-                <%--<input type="checkbox" name="like[read]" title="阅读" checked="">--%>
-                <%--<input type="checkbox" name="like[game]" title="游戏">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div class="layui-form-item" pane="">--%>
-            <%--<label class="layui-form-label">原始复选框</label>--%>
-            <%--<div class="layui-input-block">--%>
-                <%--<input type="checkbox" name="like1[write]" lay-skin="primary" title="写作" checked="">--%>
-                <%--<input type="checkbox" name="like1[read]" lay-skin="primary" title="阅读">--%>
-                <%--<input type="checkbox" name="like1[game]" lay-skin="primary" title="游戏" disabled="">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-
-        <%--<div class="layui-form-item">--%>
-            <%--<label class="layui-form-label">单选框</label>--%>
-            <%--<div class="layui-input-block">--%>
-                <%--<input type="radio" name="sex" value="男" title="男" checked="">--%>
-                <%--<input type="radio" name="sex" value="女" title="女">--%>
-                <%--<input type="radio" name="sex" value="禁" title="禁用" disabled="">--%>
-            <%--</div>--%>
-        <%--</div>--%>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
