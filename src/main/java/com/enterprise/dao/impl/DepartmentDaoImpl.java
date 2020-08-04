@@ -77,6 +77,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
         dao.update("updateTimestamp", timestamp);
     }
 
+    @Override
+    public void truncateTable() {
+        dao.selectOne("truncateTable");
+    }
+
 
     @Override
     public int insert(DepartmentPo departmentPo) {
