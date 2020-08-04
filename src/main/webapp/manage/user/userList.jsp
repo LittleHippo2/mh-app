@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="平台维护组织机构列表" %>
+<%@ page info="应用维护人员列表" %>
 
 <style>
     table {
@@ -34,14 +34,11 @@
         </div>
     </div>
 </div>
-
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs layui-btn-xs" lay-event="detail">查看</a>
-    <%--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>--%>
-    <%--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>--%>
-</script>
-
-
+<%--<script type="text/html" id="toolbarDemo">--%>
+    <%--<div class="layui-btn-container">--%>
+        <%--<button class="layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="getCheckData">增量同步</button>--%>
+    <%--</div>--%>
+<%--</script>--%>
 <script>
     layui.use(['tree', 'util', 'table'], function () {
         var tree = layui.tree
@@ -57,11 +54,10 @@
             table.render({
                 elem: '#demo'
                 , height: 'full-200'
-                , url: '/manage/department/csse/selectDeptListInfo' //数据接口
+                , url: '/manage/department/selectUserList' //数据接口
                 ,toolbar: true //开启头部工具栏，并为其绑定左侧模板
                 , where: {
-                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
-                    fatherId: id
+                    deptId: id
                 }
                 , parseData: function (res) {
                     return {
@@ -72,12 +68,11 @@
                 }
                 , page: true
                 , cols: [[ //表头
-                    {field: 'index', title: '序号', width: 300, type: 'numbers'}
-                    , {field: 'deptId', title: 'ID', width: 300, sort: true}
-                    , {field: 'name', title: '部门名称', width: 300}
-                    , {field: 'code', title: '部门简称', width: 300, sort: true}
-                    ,{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}
-
+                    {field: 'index', title: '序号', width: 150, type: 'numbers'}
+                    , {field: 'userId', title: 'ID', width: 300, sort: true}
+                    , {field: 'userName', title: '用户名称', width: 300}
+                    , {field: 'account', title: '账号', width: 300, sort: true}
+                    , {field: 'depId', title: '所在部门ID', width: 300, sort: true}
                 ]]
                 , response: {
                     statusName: 'code'
@@ -88,6 +83,17 @@
                 }
             });
         }
+        function syncData(){
+            $.ajax({
+                url:"/manage/department/sync",
+                data:{
+                    token:"3ba736c3-dc81-439b-a110-84735d41094a"
+                },
+                success:function (res) {
+                    console.log(res)
+                }
+            })
+        }
 
         //头工具栏事件
         table.on('toolbar(test)', function(obj){
@@ -95,57 +101,27 @@
             switch(obj.event){
                 case 'getCheckData':
                     // var data = checkStatus.data;
+                    syncData()
                     // layer.alert(JSON.stringify(data));
                     break;
             };
-        });
-        //监听头工具条
-        table.on('tool(test)', function(obj){
-            var data = obj.data;
-            console.log(data)
-            if(obj.event === 'detail'){
-                $.ajax({
-                    url:"/manage/department/selectDeptByDeptId",
-                    data:{
-                        token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
-                        deptId:data.deptId,
-                    },
-                    success:function(res){
-                        window.location.href="/manage/csseDepartment/csseDepartmentInfo.jsp";
-                    }
-                })
-            }
-        });
-        //监听右侧工具条
-        table.on('tool(demo)', function(obj){
-            var data = obj.data;
-            if(obj.event === 'detail'){
-                layer.msg('ID：'+ data.id + ' 的查看操作');
-            }
-            // else if(obj.event === 'del'){
-            //     layer.confirm('真的删除行么', function(index){
-            //         obj.del();
-            //         layer.close(index);
-            //     });
-            // } else if(obj.event === 'edit'){
-            //     layer.alert('编辑行：<br>'+ JSON.stringify(data))
-            // }
         });
 
 
         $(function () {
             $.ajax({
-                url: "/manage/department/csse/selectDeptList",
-                data:{
-                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea"
-                }
-                ,success: function (res) {
+                url: "/manage/department/getDeptList",
+                success: function (res) {
                     tree.render({
                         elem: '#deptList' //默认是点击节点可进行收缩
                         , data: res.data
                         , showLine: false
                         , click: function (obj) {
                             console.log(obj.data); //得到当前点击的节点数据
+                            // console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                            // console.log(obj.elem); //得到当前节点元素
+                            //
+                            // console.log(obj.data.children); //当前节点下是否有子节点
                             if (obj.data.id == 'root') {
                                 renderTable()
                             } else {

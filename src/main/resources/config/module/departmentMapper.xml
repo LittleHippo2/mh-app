@@ -37,7 +37,7 @@
 	</resultMap>
 
 	<select id="selectDepartment" resultMap="DeptBaseResultMap" parameterType="com.enterprise.entity.department.PageUtils">
-		SELECT * from sys_dept where 1=1 and type != 0
+		SELECT * from sys_dept where type != 0
 		<if test="data != null and data != ''">
 			and parent_id = #{data}
 		</if>
@@ -46,14 +46,14 @@
 	</select>
 
 	<select id="countDept" resultType="java.lang.Integer">
-		SELECT count(1) from sys_dept where 1=1 and type != 0
+		SELECT count(1) from sys_dept where  type != 0
 		<if test="_parameter != null and _parameter != ''">
 			and parent_id = #{_parameter}
 		</if>
 	</select>
 
 	<select id="countUser" resultType="java.lang.Integer">
-		SELECT count(1) from sys_user where 1=1 status != 0
+		SELECT count(1) from sys_user where status != 0
 		<if test="_parameter != null and _parameter !=''">
 			and dep_id = #{_parameter}
 		</if>
@@ -64,7 +64,7 @@
 	</select>
 
 	<select id="selectUser" resultMap="UserBaseResultMap" parameterType="com.enterprise.entity.department.PageUtils">
-		SELECT * from sys_user where 1=1 status != 0
+		SELECT * from sys_user where  status != 0
 		<if test="data != null and data !=''">
 		and dep_id = #{data}
 		</if>

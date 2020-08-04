@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="平台维护组织机构列表" %>
+<%@ page info="平台维护人员列表" %>
 
 <style>
     table {
@@ -36,9 +36,8 @@
 </div>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs layui-btn-xs" lay-event="detail">查看</a>
-    <%--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>--%>
-    <%--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>--%>
+    <a class="layui-btn layui-btn-xs layui-btn-xs" lay-event="detail">根据userId查看</a>
+    <a class="layui-btn layui-btn-xs layui-btn-xs" lay-event="detail2">根据account查看</a>
 </script>
 
 
@@ -57,11 +56,11 @@
             table.render({
                 elem: '#demo'
                 , height: 'full-200'
-                , url: '/manage/department/csse/selectDeptListInfo' //数据接口
+                , url: '/manage/department/csse/selectUserList' //数据接口
                 ,toolbar: true //开启头部工具栏，并为其绑定左侧模板
                 , where: {
                     token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
-                    fatherId: id
+                    deptId: id
                 }
                 , parseData: function (res) {
                     return {
@@ -72,11 +71,12 @@
                 }
                 , page: true
                 , cols: [[ //表头
-                    {field: 'index', title: '序号', width: 300, type: 'numbers'}
-                    , {field: 'deptId', title: 'ID', width: 300, sort: true}
-                    , {field: 'name', title: '部门名称', width: 300}
-                    , {field: 'code', title: '部门简称', width: 300, sort: true}
-                    ,{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}
+                    {field: 'index', title: '序号', width: 100, type: 'numbers'}
+                    , {field: 'userId', title: 'ID', width: 300, sort: true}
+                    , {field: 'userName', title: '用户名称', width: 150}
+                    , {field: 'account', title: '账号', width: 150, sort: true}
+                    , {field: 'depId', title: '所在部门ID', width: 300, sort: true}
+                    ,{fixed: 'right', width:300, align:'center', toolbar: '#barDemo'}
 
                 ]]
                 , response: {
@@ -105,13 +105,26 @@
             console.log(data)
             if(obj.event === 'detail'){
                 $.ajax({
-                    url:"/manage/department/selectDeptByDeptId",
+                    url: "/manage/department/csse/selectUserInfo",
                     data:{
                         token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
-                        deptId:data.deptId,
+                        userId:data.userId
                     },
                     success:function(res){
-                        window.location.href="/manage/csseDepartment/csseDepartmentInfo.jsp";
+                        window.location.href="/manage/csseUser/csseUserInfo.jsp";
+                    }
+                })
+
+
+            }else if (obj.event === 'detail2'){
+                $.ajax({
+                    url: "/manage/department/csse/selectUserInfo",
+                    data:{
+                        token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
+                        account:data.account
+                    },
+                    success:function(res){
+                        window.location.href="/manage/csseUser/csseUserInfo.jsp";
                     }
                 })
             }
@@ -122,14 +135,6 @@
             if(obj.event === 'detail'){
                 layer.msg('ID：'+ data.id + ' 的查看操作');
             }
-            // else if(obj.event === 'del'){
-            //     layer.confirm('真的删除行么', function(index){
-            //         obj.del();
-            //         layer.close(index);
-            //     });
-            // } else if(obj.event === 'edit'){
-            //     layer.alert('编辑行：<br>'+ JSON.stringify(data))
-            // }
         });
 
 

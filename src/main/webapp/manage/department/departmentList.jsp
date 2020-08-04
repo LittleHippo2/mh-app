@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="应用组织机构" %>
+<%@ page info="应用维护组织机构列表" %>
 
 <style>
     table {
@@ -17,9 +17,6 @@
     }
 
 </style>
-<link rel="stylesheet" href="../../resource/layui/css/layui.css">
-<script src="../../resource/layui/layui.js"></script>
-
 
 <div class="layui-row" >
     <div class="layui-col-md3">

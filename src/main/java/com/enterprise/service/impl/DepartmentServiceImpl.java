@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,17 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
     @Value("#{config['api.get.deptList']}")
     private String apiCsseDeptList;
 
+    @Value("#{config['api.get.dept.info']}")
+    private String apiCsseDeptInfo;
+
+    @Value("#{config['api.get.user.list']}")
+    private String apiCsseUserList;
+
+    @Value("#{config['api.get.user.info.id']}")
+    private String apiCsseUserInfoById;
+
+    @Value("#{config['api.get.user.info.account']}")
+    private String apiCsseUserInfoByAccount;
 
 
 
@@ -208,7 +221,6 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
             deptTree.setTitle(a.getName());
             deptTree.setChildren(null);
 
-
             if (a.getDeptId().equals("root")) {
                 rootList.add(deptTree);
             } else {
@@ -334,15 +346,7 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
             departmentPo.setDeptId(((JSONObject) a).getString("organId"));
             departmentPo.setName(((JSONObject) a).getString("organName"));
             departmentPo.setParentId(((JSONObject) a).getString("fatherId"));
-            departmentPo.setLevel(((JSONObject) a).getString("p"));
-            departmentPo.setOrderId(((JSONObject) a).getInteger("orderId"));
-            departmentPo.setRemark("1");
-            departmentPo.setOperator("1");
-            departmentPo.setOperatorIp("1");
-            departmentPo.setOperatorTime(LocalDate.now() + "");
-            //departmentPo.setType(((JSONObject) a).getInteger("type"));
             departmentPo.setCode(((JSONObject) a).getString("code"));
-            departmentPo.setTimestamp(((JSONObject) a).getLong("timestamp"));
             list.add(departmentPo);
         });
         resultMap.setCount(count);
@@ -354,18 +358,121 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
     }
 
     @Override
-    public ResultMap selectDeptByDeptId(String token, String deptId) {
+    public ResultMap selectDeptByDeptId(HttpServletRequest request,String token, String deptId) {
 
         ResultMap resultMap = new ResultMap();
         logger.info("********************************************************获取部门详细信息开始**********************************************************");
 
+        String startTime = TimeUtils.getNow();
+        resultMap.setStartTime(startTime);
+        String csseUrl = apiCsseDeptInfo.replace("{departmentid}",deptId);
 
+        String url = apiIp+csseUrl+"?access_token="+token;
+        logger.info("请求的接口为："+url);
+        logger.info("请求类型：GET");
 
+        long apiStartTime = System.currentTimeMillis();
+        String obj = HttpClientUtil.httpGet(url);
+        long apiEndTime = System.currentTimeMillis();
+        resultMap.setApiCallTime((apiEndTime-apiStartTime)+"ms");
+
+        JSONObject jsonObject = JSONObject.parseObject(obj);
+        DepartmentPo departmentPo = new DepartmentPo();
+        departmentPo.setDeptId(jsonObject.getString("organId"));
+        departmentPo.setName(jsonObject.getString("organName"));
+        departmentPo.setParentId(jsonObject.getString("fatherId"));
+        departmentPo.setCode(jsonObject.getString("code"));
+
+        HttpSession session = request.getSession();
+        session.setAttribute("deptInfo", JSONObject.toJSON(departmentPo));
+
+        resultMap.setData(departmentPo);
+        String endTime = TimeUtils.getNow();
+        resultMap.setEndTime(endTime);
         logger.info("********************************************************获取部门详细信息结束**********************************************************");
         return null;
     }
 
+    @Override
+    public ResultMap selectCsseUserList(Integer page, Integer limit, String token, String deptId) {
+        ResultMap resultMap = new ResultMap();
+        logger.info("********************************************************获取用户列表信息开始**********************************************************");
+        String startTime = TimeUtils.getNow();
+        resultMap.setStartTime(startTime);
+        String csseUrl = apiCsseUserList.replace("{departmentid}", deptId);
 
+        String url = apiIp+csseUrl+"?access_token="+token;
+        logger.info("请求的接口为："+url);
+        logger.info("请求类型：GET");
+        long apiStartTime = System.currentTimeMillis();
+        String obj = HttpClientUtil.httpGet(url);
+        long apiEndTime = System.currentTimeMillis();
+        resultMap.setApiCallTime((apiEndTime-apiStartTime)+"ms");
+        JSONArray jsonArray = JSONObject.parseArray(obj);
+        int count = jsonArray.size();
+        page = (page-1)*limit;
+        List<UserPo> list = new ArrayList<>();
+
+        jsonArray.stream().skip((long)page).limit(limit).forEach(a -> {
+            UserPo userPo = new UserPo();
+            userPo.setUserId(((JSONObject) a).getString("userid"));
+            userPo.setUserName(((JSONObject) a).getString("fullname"));
+            userPo.setAccount(((JSONObject) a).getString("account"));
+            userPo.setDepId(((JSONObject) a).getString("organId"));
+            list.add(userPo);
+        });
+        resultMap.setData(list);
+        resultMap.setCount(count);
+        String endTime = TimeUtils.getNow();
+        resultMap.setEndTime(endTime);
+        logger.info("********************************************************获取用户列表信息结束**********************************************************");
+        return resultMap;
+    }
+
+    @Override
+    public ResultMap selectCsseUserInfo(HttpServletRequest request, String token, String userId, String account) {
+        ResultMap resultMap = new ResultMap();
+        logger.info("********************************************************获取用户详细信息开始**********************************************************");
+        String startTime = TimeUtils.getNow();
+        resultMap.setStartTime(startTime);
+        String csseUrl = null;
+        if (userId != null){
+            csseUrl = apiCsseUserInfoById.replace("{userid}",userId);
+        }else if (account !=null){
+            csseUrl = apiCsseUserInfoByAccount.replace("{account}",account);
+        }
+        if (csseUrl != null){
+            String url = apiIp+csseUrl+"?access_token="+token;
+            logger.info("请求的接口为："+url);
+            logger.info("请求类型：GET");
+            long apiStartTime = System.currentTimeMillis();
+            String obj = HttpClientUtil.httpGet(url);
+            long apiEndTime = System.currentTimeMillis();
+            resultMap.setApiCallTime((apiEndTime-apiStartTime)+"ms");
+
+            JSONObject jsonObject = JSONObject.parseObject(obj);
+
+            UserPo userPo = new UserPo();
+            userPo.setUserId(jsonObject.getString("userid"));
+            userPo.setUserName(jsonObject.getString("fullname"));
+            userPo.setAccount(jsonObject.getString("account"));
+            userPo.setDepId(jsonObject.getString("organId"));
+            userPo.setIsManager(jsonObject.getInteger("isManager"));
+
+            HttpSession session = request.getSession();
+            session.setAttribute("userInfo", JSONObject.toJSON(userPo));
+
+            resultMap.setData(userPo);
+
+        }else{
+            resultMap.setData("userID 和 account 都为空或者没有获取到 对应csseUrl的值");
+        }
+
+        String endTime = TimeUtils.getNow();
+        resultMap.setEndTime(endTime);
+        logger.info("********************************************************获取用户详细信息结束**********************************************************");
+        return resultMap;
+    }
 
 
 }
