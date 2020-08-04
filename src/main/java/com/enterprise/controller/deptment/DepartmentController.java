@@ -2,6 +2,7 @@ package com.enterprise.controller.deptment;
 
 import com.enterprise.entity.ResultMap;
 import com.enterprise.service.DepartmentService;
+import com.enterprise.util.PlatFormUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,13 @@ public class DepartmentController {
     @RequestMapping("/sync")
     @ResponseBody
     public ResultMap syncDeptAndUser(@RequestParam(value = "token")String token) throws Exception {
-        return departmentService.syncDeptAndUser(token);
+        // fix token Unauthorized issue. 202008041316(zst)
+        String nowToken = PlatFormUtil.getAccessToken();
+        if (token.equals(nowToken)) {
+            return departmentService.syncDeptAndUser(token);
+        } else {
+            return departmentService.syncDeptAndUser(nowToken);
+        }
     }
 
     @RequestMapping("/selectList")
