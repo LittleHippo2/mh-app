@@ -20,44 +20,44 @@
         <div class="sidebar" id="sidebar">
 
             <ul class="nav nav-list" id="side-menu">
-                <li><a class="menu-item" href="javascript:void(0)" onclick="get_m_token_show()"><i class="icon-double-angle-right"></i><span class="app-menu__label">获取微服务access_token</span></a></li>
-                <li class="menu-item active"><a id="item_" href="javascript:void(0)" onclick="get_sso_show()"><i class="icon-edit"></i><span class="menu-text">登录服务</span><b class="arrow icon-angle-down"></b></a>
+                <li><a id="access" class="menu-item" href="javascript:void(0)" onclick="get_m_token_show()"><i class="icon-double-angle-right"></i><span class="app-menu__label">获取微服务access_token</span></a></li>
+                <li id="login" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="get_sso_show()"><i class="icon-edit"></i><span class="menu-text">登录服务</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="get_sso_token_show()"><i class="icon-double-angle-right"></i>获取单点登录token</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="get_sso_user_show()"><i class="icon-double-angle-right"></i>获取用户信息</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="valid_sso_token_show()"><i class="icon-double-angle-right"></i>验证token</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="refresh_sso_token_show()"><i class="icon-double-angle-right"></i>刷新单点登录token有效期</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="change_sso_password_show()"><i class="icon-double-angle-right"></i>修改密码</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="change_sso_oapassword_show()"><i class="icon-double-angle-right"></i>修改密码（不校验密码复杂度）</a></li>
-                        <li class="menu-item" ><a class="" href="javascript:void(0)" onclick="logou_sso_show()"><i class="icon-double-angle-right"></i>注销单点登录token</a></li>
+                        <li id="login_get" class="menu-item" ><a  href="javascript:void(0)" onclick="get_sso_token_show()"><i class="icon-double-angle-right"></i>获取单点登录token</a></li>
+                        <li id="login_user" class="menu-item" ><a  href="javascript:void(0)" onclick="get_sso_user_show()"><i class="icon-double-angle-right"></i>获取用户信息</a></li>
+                        <li id="login_check" class="menu-item" ><a  href="javascript:void(0)" onclick="valid_sso_token_show()"><i class="icon-double-angle-right"></i>验证token</a></li>
+                        <li id="login_refresh" class="menu-item" ><a  href="javascript:void(0)" onclick="refresh_sso_token_show()"><i class="icon-double-angle-right"></i>刷新单点登录token有效期</a></li>
+                        <li id="login_password" class="menu-item" ><a  href="javascript:void(0)" onclick="change_sso_password_show()"><i class="icon-double-angle-right"></i>修改密码</a></li>
+                        <li id="login_oapassword" class="menu-item" ><a  href="javascript:void(0)" onclick="change_sso_oapassword_show()"><i class="icon-double-angle-right"></i>修改密码（不校验密码复杂度）</a></li>
+                        <li id="login_logout" class="menu-item" ><a class="" href="javascript:void(0)" onclick="logou_sso_show()"><i class="icon-double-angle-right"></i>注销单点登录token</a></li>
                     </ul>
                 </li>
 
-                <li class="menu-item active"><a class="app-menu__item" href="javascript:void(0)" onclick="get_deparement_show()"><i class="icon-edit"></i><span class="menu-text">组织机构服务</span><b class="arrow icon-angle-down"></b></a>
+                <li id="depart" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="get_deparement_show()"><i class="icon-edit"></i><span class="menu-text">组织机构服务</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_deparement_list_show()"><i class="icon-double-angle-right"></i>获取部门列表</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_more_department_list_show()"><i class="icon-double-angle-right"></i>获取多部门列表</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_department_info_show()"><i class="icon-double-angle-right"></i>获取部门详情</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_user_list_show()"><i class="icon-double-angle-right"></i>获取人员列表</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_userinfoByAccount_show()"><i class="icon-double-angle-right"></i>获取人员详情（根据account）</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_userinfo_show()"><i class="icon-double-angle-right"></i>获取人员详情</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="sync_show()"><i class="icon-double-angle-right"></i>增量同步接口</a></li>
+                        <li id="depart_get" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_deparement_list_show()"><i class="icon-double-angle-right"></i>获取部门列表</a></li>
+                        <li id="depart_gets" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_more_department_list_show()"><i class="icon-double-angle-right"></i>获取多部门列表</a></li>
+                        <li id="depart_info" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_department_info_show()"><i class="icon-double-angle-right"></i>获取部门详情</a></li>
+                        <li id="depart_userlist" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_user_list_show()"><i class="icon-double-angle-right"></i>获取人员列表</a></li>
+                        <li id="depart_userinfo" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_userinfoByAccount_show()"><i class="icon-double-angle-right"></i>获取人员详情（根据account）</a></li>
+                        <li id="depart_departByAccount" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_userinfo_show()"><i class="icon-double-angle-right"></i>获取人员详情</a></li>
+                        <li id="depart_sync" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="sync_show()"><i class="icon-double-angle-right"></i>增量同步接口</a></li>
                     </ul>
                 </li>
-                <li class="menu-item active"><a class="app-menu__item" href="javascript:void(0)" onclick="get_msg_show()"><i class="icon-edit"></i><span class="menu-text">消息服务</span><b class="arrow icon-angle-down"></b></a>
+                <li id="message" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="get_msg_show()"><i class="icon-edit"></i><span class="menu-text">消息服务</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="msg_one_user_show()"><i class="icon-double-angle-right"></i>发送消息至个人</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="msg_more_user_show()"><i class="icon-double-angle-right"></i>发送消息至多人</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="msg_one_department_show()"><i class="icon-double-angle-right"></i>发送消息至部门</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="msg_more_department_show()"><i class="icon-double-angle-right"></i>发送消息至多部门</a></li>
+                        <li id="message_toOne" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="msg_one_user_show()"><i class="icon-double-angle-right"></i>发送消息至个人</a></li>
+                        <li id="message_toMany" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="msg_more_user_show()"><i class="icon-double-angle-right"></i>发送消息至多人</a></li>
+                        <li id="message_toDepart" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="msg_one_department_show()"><i class="icon-double-angle-right"></i>发送消息至部门</a></li>
+                        <li id="message_toDeparts" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="msg_more_department_show()"><i class="icon-double-angle-right"></i>发送消息至多部门</a></li>
                     </ul>
                 </li>
-                <li class="menu-item active"><a class="app-menu__item" href="javascript:void(0)" onclick="get_logs_show()"><i class="icon-edit"></i><span class="menu-text">日志服务</span><b class="arrow icon-angle-down"></b></a>
+                <li id="log" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="get_logs_show()"><i class="icon-edit"></i><span class="menu-text">日志服务</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="add_log_show()"><i class="icon-double-angle-right"></i>增加日志操作</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_log1_show()"><i class="icon-double-angle-right"></i>根据用户名审计应用日志</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_log2_show()"><i class="icon-double-angle-right"></i>根据应用标识审计应用日志</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="get_log3_show()"><i class="icon-double-angle-right"></i>根据应用标识审计平台日志</a></li>
+                        <li id="log_add" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="add_log_show()"><i class="icon-double-angle-right"></i>增加日志操作</a></li>
+                        <li id="log_audByName" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_log1_show()"><i class="icon-double-angle-right"></i>根据用户名审计应用日志</a></li>
+                        <li id="log_audByAppid" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_log2_show()"><i class="icon-double-angle-right"></i>根据应用标识审计应用日志</a></li>
+                        <li id="log_audByAppidPt" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="get_log3_show()"><i class="icon-double-angle-right"></i>根据应用标识审计平台日志</a></li>
                     </ul>
                 </li>
                 <!--<li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">检索服务</span><i class="treeview-indicator fa fa-angle-right"></i></a>
@@ -67,12 +67,12 @@
                         <li><a class="treeview-item" href="javascript:void(0)"><i class="icon fa fa-circle-o"></i>搜索应用内部数据标准</a></li>
                     </ul>
                 </li>-->
-                <li class="menu-item active"><a class="app-menu__item" href="javascript:void(0)" onclick="get_subscribe_show()"><i class="icon-edit"></i><span class="menu-text">订阅服务</span><b class="arrow icon-angle-down"></b></a>
+                <li id="subscribe" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="get_subscribe_show()"><i class="icon-edit"></i><span class="menu-text">订阅服务</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="subscribe_add_show()"><i class="icon-double-angle-right"></i>添加订阅信息</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="subscribe_delete_show()"><i class="icon-double-angle-right"></i>删除订阅信息</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="subscribe_user_show()"><i class="icon-double-angle-right"></i>查询用户的订阅信息</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="subscribe_article_user_show()"><i class="icon-double-angle-right"></i>查询用户是否订阅指定文章</a></li>
+                        <li id="subscribe_add" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="subscribe_add_show()"><i class="icon-double-angle-right"></i>添加订阅信息</a></li>
+                        <li id="subscribe_del" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="subscribe_delete_show()"><i class="icon-double-angle-right"></i>删除订阅信息</a></li>
+                        <li id="subscribe_search" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="subscribe_user_show()"><i class="icon-double-angle-right"></i>查询用户的订阅信息</a></li>
+                        <li id="subscribe_get" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="subscribe_article_user_show()"><i class="icon-double-angle-right"></i>查询用户是否订阅指定文章</a></li>
                     </ul>
                 </li>
                 <!-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-cog"></i><span class="app-menu__label">待办任务服务</span><i class="treeview-indicator fa fa-angle-right"></i></a>
@@ -97,17 +97,17 @@
                          <li><a class="treeview-item" href="javascript:void(0)"><i class="icon fa fa-circle-o"></i>应用窗口关闭事件拦截处理（定义模式）</a></li>
                      </ul>
                  </li>-->
-                <li class="menu-item active"><a class="app-menu__item" href="javascript:void(0)" onclick="desktop_show()"><i class="icon-edit"></i><span class="menu-text">办公桌面信息屏接口</span><b class="arrow icon-angle-down"></b></a>
+                <%--<li id="desktop" class="menu-item"><a class="app-menu__item" href="javascript:void(0)" onclick="desktop_show()"><i class="icon-edit"></i><span class="menu-text">办公桌面信息屏接口</span><b class="arrow icon-angle-down"></b></a>
                     <ul class="submenu">
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="openAppShow()"><i class="icon-double-angle-right"></i>打开应用</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="setWinSizeShow()"><i class="icon-double-angle-right"></i>设置新窗口打开大小</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="getAppListShow()"><i class="icon-double-angle-right"></i>获取应用列表</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="getAppListInfoShow()"><i class="icon-double-angle-right"></i>获取应用详情</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="reloadShow()"><i class="icon-double-angle-right"></i>重新加载</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" onclick="clearCacheShow()"><i class="icon-double-angle-right"></i>清空缓存</a></li>
-                        <li><a class="menu-item" href="javascript:void(0)" ><i class="icon-double-angle-right"></i>应用需实现接口说明</a></li>
+                        <li id="desktop_open" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="openAppShow()"><i class="icon-double-angle-right"></i>打开应用</a></li>
+                        <li id="desktop_size" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="setWinSizeShow()"><i class="icon-double-angle-right"></i>设置新窗口打开大小</a></li>
+                        <li id="desktop_apps" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="getAppListShow()"><i class="icon-double-angle-right"></i>获取应用列表</a></li>
+                        <li id="desktop_appInfo" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="getAppListInfoShow()"><i class="icon-double-angle-right"></i>获取应用详情</a></li>
+                        <li id="desktop_reloadt" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="reloadShow()"><i class="icon-double-angle-right"></i>重新加载</a></li>
+                        <li id="desktop_clear" class="menu-item"><a class="menu-item" href="javascript:void(0)" onclick="clearCacheShow()"><i class="icon-double-angle-right"></i>清空缓存</a></li>
+                        <li id="desktop_explain" class="menu-item"><a class="menu-item" href="javascript:void(0)" ><i class="icon-double-angle-right"></i>应用需实现接口说明</a></li>
                     </ul>
-                </li>
+                </li>--%>
 
 
             </ul>
@@ -149,11 +149,12 @@
 
         //Activate bootstrip tooltips
         $("[data-toggle='tooltip']").tooltip();
+        $("#access").click();
 
     });
     </script>
 
-<div region="north" split="true" title="基本信息" style="padding-left:20%;padding-top:5%;height:150px">
+<div region="north" split="true" title="基本信息" style="padding-left:15%;padding-top:5%;height:150px;padding-right:15%;">
 
     <table class="table table-striped table-bordered table-hover">
         <tr>
@@ -172,7 +173,7 @@
     </table>
     <br><br>
 </div>
-<div  id="content" title="接口测试" style="padding-left:20%;padding-top:8%">
+<div  id="content" title="接口测试" style="padding-left:15%;padding-top:8%;padding-right:15%;">
 
 </div>
 </body>

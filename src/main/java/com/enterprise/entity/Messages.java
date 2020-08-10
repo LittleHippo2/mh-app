@@ -21,6 +21,7 @@ public class Messages extends PageModel implements Serializable{
 	private String content;	//留言内容
 	private String leavetime;//留言时间
 	private String vcode;	//验证码
+	private int state;   //留言状态 0:未读 1：已读
 	
 	public void clean() {
 		super.clean();
@@ -103,10 +104,11 @@ public class Messages extends PageModel implements Serializable{
 		this.vcode = vcode;
 	}
 
+	public int getState() {
+		return state;
+	}
 
-	
-	
-	
-	
-	
+	public void setState(int state) {
+		this.state = state;
+	}
 }

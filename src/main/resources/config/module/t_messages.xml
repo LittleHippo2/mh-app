@@ -11,6 +11,9 @@
 		<if test="gender!='' and gender!=null">
 		 	and gender=#{gender}
 		</if>
+		<if test="state!='' and state!=null">
+			and state=#{state}
+		</if>
 		order by id desc
 		limit #{offset},#{pageSize}
 	</select>
@@ -20,6 +23,9 @@
 		select count(*) from  t_messages t where 1=1 
 		<if test="gender!='' and gender!=null">
 		 	and gender=#{gender}
+		</if>
+		<if test="state!='' and state!=null">
+			and state=#{state}
 		</if>
 	</select>
 	<insert id="message.insert"
@@ -92,6 +98,9 @@
 		</if>
 		<if test="content!=null and content!=''">
 			,content=#{content}
+		</if>
+		<if test="state!=null and state!=''">
+			,state=#{state}
 		</if>
 			where 1=1 and id=#{id}
 	</update>

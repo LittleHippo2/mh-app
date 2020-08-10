@@ -31,6 +31,10 @@
     <link rel="stylesheet" href="<%=path%>/resource/css/style.css">
     <script type="text/javascript" src="<%=path %>/resource/js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="<%=path%>/resource/js/jquery.SuperSlide.2.1.1.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="<%=path %>/resource/bootstrap-3.3.5/css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="<%=path %>/resource/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<%=path %>/resource/bootstrap-3.3.5/js/bootstrap-modal.js"></script>
 </head>
 
 <%
