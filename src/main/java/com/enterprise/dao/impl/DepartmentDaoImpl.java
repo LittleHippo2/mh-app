@@ -2,6 +2,7 @@ package com.enterprise.dao.impl;
 
 import com.enterprise.dao.BaseDao;
 import com.enterprise.dao.DepartmentDao;
+import com.enterprise.entity.User;
 import com.enterprise.entity.department.DepartmentPo;
 import com.enterprise.entity.department.PageUtils;
 import com.enterprise.entity.department.UserPo;
@@ -48,13 +49,23 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     @Override
-    public void updateDepartment(DepartmentPo departmentPo) {
-        dao.update("updateDepartment", departmentPo);
+    public void updateDepartment(List<DepartmentPo> list) {
+        dao.update("updateDepartment", list);
     }
 
     @Override
-    public void updateUser(UserPo userPo) {
-        dao.insert("updateUser", userPo);
+    public void updateUser(List<UserPo> list) {
+        dao.insert("updateUser", list);
+    }
+
+    @Override
+    public void insertDepartment(List<DepartmentPo> list) {
+         dao.insert("insertDepartment", list);
+    }
+
+    @Override
+    public void insertUser(List<UserPo> list) {
+         dao.insert("insertUser", list);
     }
 
     @Override
@@ -80,6 +91,16 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public void truncateTable() {
         dao.selectOne("truncateTable");
+    }
+
+    @Override
+    public void insertTUser(List<User> list) {
+        dao.insert("insertTUser", list);
+    }
+
+    @Override
+    public UserPo selectUserByAccount(String account) {
+        return (UserPo) dao.selectOne("selectUserByAccount", account);
     }
 
 

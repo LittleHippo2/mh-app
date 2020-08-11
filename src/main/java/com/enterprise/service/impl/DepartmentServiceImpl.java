@@ -1,11 +1,11 @@
 package com.enterprise.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.enterprise.dao.DepartmentDao;
 import com.enterprise.dao.ServersManage;
 import com.enterprise.entity.ResultMap;
+import com.enterprise.entity.User;
 import com.enterprise.entity.department.DepartmentPo;
 import com.enterprise.entity.department.DeptTree;
 import com.enterprise.entity.department.PageUtils;
@@ -26,11 +26,8 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Service("departmentService")
-@Transactional("transactionManager")
 public class DepartmentServiceImpl extends ServersManage<DepartmentPo, DepartmentDao> implements DepartmentService {
 
     private static final Logger logger = LogManager.getLogger(DepartmentServiceImpl.class);
@@ -68,10 +65,11 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
      * @return
      */
     @Override
-    @Transactional("transactionManager")
+    @Transactional
     public ResultMap syncDeptAndUser(String token) throws Exception {
 
         logger.info("******************************************************************************************增量同步开始************************************************************************");
+
         Long starttime = dao.getTimestamp();
         logger.info("token：" + token);
         ResultMap resultMap = new ResultMap();
@@ -98,13 +96,9 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
 
         //将同步过来的数据插入本地数据库
         insertTable(obj, resultMap, starttime);
-//        try {
-//            insertTable(obj, resultMap, starttime);
-//        } catch (Exception e) {
-//            logger.error(e);
-//            dao.updateTimestamp((long) 1);
-//        }
 
+//        int a[] = {1,2,3};
+//        int b = a[4];
 
         //方法结束时间
         long endTime2 = System.currentTimeMillis();
@@ -119,10 +113,15 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
         return resultMap;
     }
 
-    @Transactional("transactionManager")
+    @Transactional
     public ResultMap insertTable(String obj, ResultMap resultMap, long starttime) {
 
         String resultCode = JSONObject.parseObject(obj).getString("rsltmsg");
+        List<DepartmentPo> insertDeptList = new ArrayList<>();
+        List<DepartmentPo> updateDeptList = new ArrayList<>();
+        List<UserPo> insertUserList = new ArrayList<>();
+        List<UserPo> updateUserList = new ArrayList<>();
+        List<User> usersList = new ArrayList<>();
         if (resultCode != null) {
             JSONArray org = JSONObject.parseObject(obj).getJSONArray("org");
             JSONArray user = JSONObject.parseObject(obj).getJSONArray("user");
@@ -131,7 +130,7 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
             } else {
                 if (org.size() != 0) {
                     //使用java8 forEach 的并联流方法，并且加上lambda 表达式的写法，可以提高遍历效率，并且代码的可读性提高
-                    org.parallelStream().forEach(a -> {
+                    org.stream().forEach(a -> {
                         DepartmentPo departmentPo = new DepartmentPo();
                         departmentPo.setDeptId(((JSONObject) a).getString("organId"));
                         departmentPo.setName(((JSONObject) a).getString("organName"));
@@ -150,20 +149,39 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
                             switch (((JSONObject) a).getInteger("type")) {
                                 case 2:
                                     //type 为2 新增
-                                    dao.insertDeptByOne(departmentPo);
+                                    insertDeptList.add(departmentPo);
                                     break;
                                 default:
-                                    dao.updateDepartment(departmentPo);
+                                    //修改和删除
+                                    updateDeptList.add(departmentPo);
                                     break;
                             }
                         } else {
-                            dao.insertDeptByOne(departmentPo);
+                            insertDeptList.add(departmentPo);
                         }
                     });
+                    List<DepartmentPo> list1;
+                        if (insertDeptList.size() != 0){
+                            for(int b = 0; b< insertDeptList.size(); b++){
+                                if (b%300 ==0){
+                                    if (b+300 >= insertDeptList.size()){
+                                        list1 = insertDeptList.subList(b, insertDeptList.size());
+                                        dao.insertDepartment(list1);
+                                    }else {
+                                        list1 = insertDeptList.subList(b, b + 300);
+                                        dao.insertDepartment(list1);
+                                    }
+                                }
+                            }
+                        }
+                        if (updateDeptList.size() != 0){
+                            dao.updateDepartment(updateDeptList);
+                        }
                 }
                 if (user.size() != 0) {
-                    user.parallelStream().forEach(a -> {
+                    user.stream().forEach(a -> {
                         UserPo userPo = new UserPo();
+                        User user1 = new User();
                         userPo.setUserId(((JSONObject) a).getString("userid"));
                         userPo.setUserName(((JSONObject) a).getString("fullname"));
                         userPo.setTelephone(((JSONObject) a).getString("mobile"));
@@ -176,19 +194,47 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
                         userPo.setOrderId(((JSONObject) a).getInteger("orderId"));
                         userPo.setTimestamp(((JSONObject) a).getLong("timestamp"));
 
+//                        user1.setUsername(userPo.getAccount());
+//                        user1.setPassword("1");
+//                        user1.setCreateAccount(userPo.getAccount());
+//                        user1.setUpdateAccount(userPo.getAccount());
+//                        user1.setNickname(userPo.getUserName());
+//                        user1.setEmail("root@root.com");
+//                        user1.setPortrait("attached/headPortrait/20160606/146519569961677556119.jpg");
                         if (starttime != 1) {
                             switch (((JSONObject) a).getInteger("type")) {
                                 case 2:
-                                    dao.insertUserByOne(userPo);
+                                    //2是新增
+                                    insertUserList.add(userPo);
                                     break;
                                 default:
-                                    dao.updateUser(userPo);
+                                    //修改和删除
+                                    updateUserList.add(userPo);
                                     break;
                             }
                         } else {
-                            dao.insertUserByOne(userPo);
+                            insertUserList.add(userPo);
+                            usersList.add(user1);
                         }
                     });
+                    List<UserPo> list;
+                    if (insertUserList.size() != 0){
+                        for(int b = 0; b< insertUserList.size(); b++){
+                            if (b%300 ==0){
+                                if (b+300 >= insertUserList.size()){
+                                    list = insertUserList.subList(b, insertUserList.size());
+                                    dao.insertUser(list);
+                                }else {
+                                    list = insertUserList.subList(b, b + 300);
+                                    dao.insertUser(list);
+                                }
+                            }
+                        }
+                    }
+                    if (updateUserList.size() != 0){
+                        dao.updateUser(updateUserList);
+                    }
+
                 }
                 resultMap.setData("同步完成！共同步组织机构数据："+org.size()+"条。同步人员信息："+user.size()+"条。");
             }
@@ -478,5 +524,96 @@ public class DepartmentServiceImpl extends ServersManage<DepartmentPo, Departmen
     @Override
     public void updateTime(Long time) {
         dao.updateTimestamp(time);
+    }
+
+    @Override
+    public ResultMap test(String token) {
+
+        ResultMap resultMap = new ResultMap();
+
+        String url = apiIp + apiSyncDept + "?starttime=" + 1 + "&department=&access_token=" + token;
+
+
+        String obj = HttpClientUtil.httpGet(url);
+
+        JSONArray org = JSONObject.parseObject(obj).getJSONArray("org");
+        JSONArray user = JSONObject.parseObject(obj).getJSONArray("user");
+
+        List<DepartmentPo> list = new ArrayList<>();
+        List<UserPo> userList = new ArrayList<>();
+        List<DepartmentPo> nullList = new ArrayList<>();
+//        user.stream().forEach(a -> {
+//            UserPo userPo = new UserPo();
+//            User user1 = new User();
+//            userPo.setUserId(((JSONObject) a).getString("userid"));
+//            userPo.setUserName(((JSONObject) a).getString("fullname"));
+//            userPo.setTelephone(((JSONObject) a).getString("mobile"));
+//            userPo.setMail(((JSONObject) a).getString("userEmail"));
+//            userPo.setAccount(((JSONObject) a).getString("account"));
+//            userPo.setDepId(((JSONObject) a).getString("organId"));
+//            userPo.setStatus(((JSONObject) a).getInteger("type"));
+//            userPo.setOperatorTime(LocalDate.now() + "");
+//            userPo.setIsManager(((JSONObject) a).getInteger("isManager"));
+//            userPo.setOrderId(((JSONObject) a).getInteger("orderId"));
+//            userPo.setTimestamp(((JSONObject) a).getLong("timestamp"));
+//
+////            user1.setUsername(userPo.getAccount());
+////            user1.setPassword("1");
+////            user1.setCreateAccount(userPo.getAccount());
+////            user1.setUpdateAccount(userPo.getAccount());
+////            user1.setNickname(userPo.getUserName());
+////            user1.setEmail("root@root.com");
+////            user1.setPortrait("attached/headPortrait/20160606/146519569961677556119.jpg");
+//
+//            userList.add(userPo);
+//        });
+//        nullList = list.stream().filter(a -> a.getDeptId()==null).collect(Collectors.toList());
+//        System.out.println(nullList);
+//       int a =  dao.insertDepartment(list);
+        org.stream().forEach(a -> {
+            DepartmentPo departmentPo = new DepartmentPo();
+            departmentPo.setDeptId(((JSONObject) a).getString("organId"));
+            departmentPo.setName(((JSONObject) a).getString("organName"));
+            departmentPo.setParentId(((JSONObject) a).getString("fatherId"));
+            departmentPo.setLevel(((JSONObject) a).getString("p"));
+            departmentPo.setOrderId(((JSONObject) a).getInteger("orderId"));
+            departmentPo.setRemark("1");
+            departmentPo.setOperator("1");
+            departmentPo.setOperatorIp("1");
+            departmentPo.setOperatorTime(LocalDate.now() + "");
+            departmentPo.setType(((JSONObject) a).getInteger("type"));
+            departmentPo.setCode(((JSONObject) a).getString("code"));
+            departmentPo.setTimestamp(((JSONObject) a).getLong("timestamp"));
+
+            list.add(departmentPo);
+
+        });
+
+        //int a = dao.insertUser(userList);
+        List<DepartmentPo> list1;
+        for(int b = 0; b< list.size(); b++){
+            if (b%100 ==0){
+                if (b+100 >= list.size()){
+                    list1 = list.subList(b, list.size());
+                    dao.insertDepartment(list1);
+                }else {
+                    list1 = list.subList(b, b + 100);
+                    dao.insertDepartment(list1);
+                }
+            }
+        }
+      //  dao.insertDepartment(list);
+
+
+        return resultMap;
+    }
+
+    @Override
+    public ResultMap selectUserByAccount(String account) {
+        ResultMap resultMap= new ResultMap();
+
+        UserPo userPo = dao.selectUserByAccount(account);
+        resultMap.setData(userPo);
+        return resultMap;
     }
 }

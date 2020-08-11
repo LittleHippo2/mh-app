@@ -30,15 +30,15 @@ public interface Services <E extends PageModel>{
      */
     public int update(E e);
     /**
-     * 查询一条记录
-     */
-    public E selectOne(E e);
-    /**
      * 根据Id查询
      * @param id
      * @return
      */
     public E selectById(int id);
+    /**
+     * 查询一条记录
+     */
+    public E selectOne(E e);
     /**
      * 分页查询
      */

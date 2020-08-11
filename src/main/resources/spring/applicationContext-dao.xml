@@ -78,4 +78,5 @@
 		<aop:pointcut id="interceptorPointCuts" expression="execution(public * com.enterprise.dao.*.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>
 	</aop:config>
+
 </beans>

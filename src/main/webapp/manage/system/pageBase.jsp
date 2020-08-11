@@ -44,15 +44,15 @@
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <li>
-                            <a href="<%=path %>/manage/user/toEdit?id=<%if (u != null) { %> <%=u.getId() %> <%} %>">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
+                        <%--<li>--%>
+                            <%--<a href="<%=path %>/manage/user/toEdit?username=<%if (u != null) { %> <%=u.getId() %> <%} %>">--%>
+                                <%--<i class="icon-cog"></i>--%>
+                                <%--设置--%>
+                            <%--</a>--%>
+                        <%--</li>--%>
 
                         <li>
-                            <a href="<%=path %>/manage/user/info?id=<%if(u!=null){ %><%=u.getId() %><%} %>">
+                            <a href="<%=path %>/manage/user/info?username=<%if(u!=null){ %><%=u.getUsername() %><%} %>">
                                 <i class="icon-user"></i>
                                 个人资料
                             </a>
@@ -60,12 +60,12 @@
 
                         <li class="divider"></li>
 
-                        <li>
-                            <a href="<%=path %>/manage/user/logout">
-                                <i class="icon-off"></i>
-                                退出
-                            </a>
-                        </li>
+                        <%--<li>--%>
+                            <%--<a href="<%=path %>/manage/user/logout">--%>
+                                <%--<i class="icon-off"></i>--%>
+                                <%--退出--%>
+                            <%--</a>--%>
+                        <%--</li>--%>
                     </ul>
                 </li>
             </ul><!-- /.ace-nav -->

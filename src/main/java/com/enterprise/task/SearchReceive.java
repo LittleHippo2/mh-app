@@ -33,8 +33,8 @@ public class SearchReceive implements ApplicationListener<ContextRefreshedEvent>
 //                JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
 //                String token = result.getString("access_token");
 //                try {
-//                    departmentService.truncateTable();
-//                    departmentService.updateTime((long)1);
+//                    //departmentService.truncateTable();
+//                    //departmentService.updateTime((long)1);
 //                    departmentService.syncDeptAndUser(token);
 //                } catch (Exception e) {
 //                    e.printStackTrace();

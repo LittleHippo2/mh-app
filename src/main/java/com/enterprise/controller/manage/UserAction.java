@@ -18,19 +18,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.enterprise.entity.Systemlog;
+import com.alibaba.fastjson.JSONObject;
+import com.enterprise.entity.*;
+import com.enterprise.entity.Menu;
+import com.enterprise.entity.MenuItem;
+import com.enterprise.entity.department.UserPo;
+import com.enterprise.service.DepartmentService;
 import com.enterprise.service.MenuService;
+import com.enterprise.util.HttpUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.enterprise.entity.Menu;
-import com.enterprise.entity.MenuItem;
-import com.enterprise.entity.User;
 import com.enterprise.service.Services;
 import com.enterprise.service.impl.UserServiceImpl;
 import com.enterprise.service.SystemlogService;
@@ -46,6 +52,14 @@ import com.enterprise.controller.BaseController;
 @Controller
 @RequestMapping("/manage/user/")
 public class UserAction extends BaseController<User> {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Value("#{config['api.ip']}")
+	private String apiIp;
+
+	@Value("#{config['api.sso.user']}")
+	private String ssoUserUrl;
 
 	private static final long serialVersionUID = 1L;
 
@@ -70,6 +84,9 @@ public class UserAction extends BaseController<User> {
 	private MenuService menuService;
 	@Autowired
 	private SystemlogService systemlogService;
+
+	@Autowired
+	private DepartmentService departmentService;
 
 	@Override
 	public Services<User> getService() {
@@ -97,100 +114,126 @@ public class UserAction extends BaseController<User> {
 	 * @return
 	 */
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String login(@ModelAttribute("e") User e, HttpSession session,HttpServletRequest request) {
-		if (session.getAttribute("manage_session_user_info") != null) {
-			return "redirect:/manage/user/home";
-		}
-		/**
-		 * 判断没有cookie
-		 */
-		Cookie[] cookies = request.getCookies();
-		Cookie sCookie=null;
-		String username = null;
-		String password = null;
-		if(cookies!=null && cookies.length>0){
-			for(int i = 0; i<cookies.length;i++){
-				sCookie = cookies[i];
-				if(sCookie!=null){
-					if(StringUtils.equals(sCookie.getName(), "manage_cookie_username")){
-						username = sCookie.getValue();
-					}
-					if(StringUtils.equals(sCookie.getName(), "manage_cookie_password")){
-						password = sCookie.getValue();
-					}
-				}
+	public String login(@ModelAttribute("e") User e, HttpSession session,HttpServletRequest request,@RequestParam(value = "access_token", required = false)String access_token) throws Exception {
+//		if (session.getAttribute("manage_session_user_info") != null) {
+//			return "redirect:/manage/user/home";
+//		}
+//		/**
+//		 * 判断没有cookie
+//		 */
+//		Cookie[] cookies = request.getCookies();
+//		Cookie sCookie=null;
+//		String username = null;
+//		String password = null;
+//		if(cookies!=null && cookies.length>0){
+//			for(int i = 0; i<cookies.length;i++){
+//				sCookie = cookies[i];
+//				if(sCookie!=null){
+//					if(StringUtils.equals(sCookie.getName(), "manage_cookie_username")){
+//						username = sCookie.getValue();
+//					}
+//					if(StringUtils.equals(sCookie.getName(), "manage_cookie_password")){
+//						password = sCookie.getValue();
+//					}
+//				}
+//			}
+//		}
+//		if(username!=null && password!=null&&session.getAttribute("manage_session_user_info")==null){
+//			e.setUsername(username);
+//			e.setPassword(password);
+//			e = userServiceImpl.login(e);
+//			session.setAttribute("manage_session_user_info", e);
+//			Collection<MenuItem> userMenus = loadMenus();
+//			session.setAttribute("userMenus", userMenus);
+//			return "redirect:/manage/user/home";
+//		}
+//		return page_input;
+
+		if (access_token !=null) {
+			String url = apiIp + ssoUserUrl;
+			Map inParam = new HashMap<String, Object>();
+			inParam.put("access_token", access_token);
+
+			String result = HttpUtil.post(url, inParam, 3000, 3000);
+			JSONObject result2 = JSONObject.parseObject(result);
+
+			if (!"操作成功".equals(result2.getString("rsltmsg"))){
+				logger.error(result2.toString());
+				return "404.jsp";
 			}
-		}
-		if(username!=null && password!=null&&session.getAttribute("manage_session_user_info")==null){
-			e.setUsername(username);
-			e.setPassword(password);
-			e = userServiceImpl.login(e);
-			session.setAttribute("manage_session_user_info", e);
+			User user = new User();
+
+			user.setUsername(result2.getString("account"));
+			user.setNickname(result2.getString("fullname"));
+			user.setEmail("root@root.com");
+
+			session.setAttribute("manage_session_user_info", user);
 			Collection<MenuItem> userMenus = loadMenus();
 			session.setAttribute("userMenus", userMenus);
-			return "redirect:/manage/user/home";
-		}
-		return page_input;
-	}
-
-	/**
-	 * 登录方法
-	 * 
-	 * @param session
-	 * @param e
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public String login(HttpSession session,HttpServletResponse response, @ModelAttribute("e") User e, ModelMap model) throws Exception {
-		String remember = RequestHolder.getRequest().getParameter("remember");
-		String errorMsg;
-		if (session.getAttribute("manage_session_user_info") != null) {
-			return "redirect:/manage/user/home";
-		}
-		if (StringUtils.isBlank(e.getUsername()) || StringUtils.isBlank(e.getPassword())) {
-			model.addAttribute("errorMsg", "用户名和密码不能为空");
-			return page_input;
-		}
-		if(StringUtils.isBlank(e.getManage_vcode())){
-			model.addAttribute("errorMsg", "验证码不能为空");
-			return page_input;
-		}
-		String manage_vcode = RequestHolder.getSession().getAttribute("validateCode").toString();
-		if (e.getManage_vcode().toLowerCase().equals("0000")){
-
+			return page_home;
 		}else{
-			if(StringUtils.isNotBlank(manage_vcode)&&!(manage_vcode.toLowerCase()).equals(e.getManage_vcode().toLowerCase())){
-				model.addAttribute("errorMsg", "验证码错误");
-				return page_input;
-			}
+			return "404.jsp";
 		}
-		e.setPassword(MD5.md5(e.getPassword()));
-		User u = userServiceImpl.login(e);
-		if (u == null) {
-			errorMsg = "登录失败，用户名和密码不符";
-			model.addAttribute("errorMsg", errorMsg);
-			return page_input;
-		}
-		if(StringUtils.isNotBlank(remember)){
-			Cookie usernameCookie = new Cookie("manage_cookie_username", e.getUsername());
-			Cookie passwordCookie = new Cookie("manage_cookie_password", e.getPassword());
-			usernameCookie.setMaxAge(60*60*24*7);	//七天
-			passwordCookie.setMaxAge(60*60*24*7);	//七天
-			response.addCookie(usernameCookie);
-			response.addCookie(passwordCookie);
-		}
-		session.setAttribute("manage_session_user_info", u);
-		Collection<MenuItem> userMenus = loadMenus();
-		session.setAttribute("userMenus", userMenus);
-		try {
-			insertLog(u, "login");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return "redirect:/manage/user/home";
 	}
+
+//	/**
+//	 * 登录方法
+//	 *
+//	 * @param session
+//	 * @param e
+//	 * @param model
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value = "login", method = RequestMethod.POST)
+//	public String login(HttpSession session,HttpServletResponse response, @ModelAttribute("e") User e, ModelMap model) throws Exception {
+//		String remember = RequestHolder.getRequest().getParameter("remember");
+//		String errorMsg;
+//		if (session.getAttribute("manage_session_user_info") != null) {
+//			return "redirect:/manage/user/home";
+//		}
+//		if (StringUtils.isBlank(e.getUsername()) || StringUtils.isBlank(e.getPassword())) {
+//			model.addAttribute("errorMsg", "用户名和密码不能为空");
+//			return page_input;
+//		}
+//		if(StringUtils.isBlank(e.getManage_vcode())){
+//			model.addAttribute("errorMsg", "验证码不能为空");
+//			return page_input;
+//		}
+//		String manage_vcode = RequestHolder.getSession().getAttribute("validateCode").toString();
+//		if (e.getManage_vcode().toLowerCase().equals("0000")){
+//
+//		}else{
+//			if(StringUtils.isNotBlank(manage_vcode)&&!(manage_vcode.toLowerCase()).equals(e.getManage_vcode().toLowerCase())){
+//				model.addAttribute("errorMsg", "验证码错误");
+//				return page_input;
+//			}
+//		}
+//		e.setPassword(MD5.md5(e.getPassword()));
+//		User u = userServiceImpl.login(e);
+//		if (u == null) {
+//			errorMsg = "登录失败，用户名和密码不符";
+//			model.addAttribute("errorMsg", errorMsg);
+//			return page_input;
+//		}
+//		if(StringUtils.isNotBlank(remember)){
+//			Cookie usernameCookie = new Cookie("manage_cookie_username", e.getUsername());
+//			Cookie passwordCookie = new Cookie("manage_cookie_password", e.getPassword());
+//			usernameCookie.setMaxAge(60*60*24*7);	//七天
+//			passwordCookie.setMaxAge(60*60*24*7);	//七天
+//			response.addCookie(usernameCookie);
+//			response.addCookie(passwordCookie);
+//		}
+//		session.setAttribute("manage_session_user_info", u);
+//		Collection<MenuItem> userMenus = loadMenus();
+//		session.setAttribute("userMenus", userMenus);
+//		try {
+//			insertLog(u, "login");
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//		return "redirect:/manage/user/home";
+//	}
 
 	/**
 	 * 主页面
@@ -268,7 +311,8 @@ public class UserAction extends BaseController<User> {
 			}
 	    }
 		e.clear();
-		return page_input;
+//		return page_input;
+		return "404.jsp";
 	}
 
 
@@ -293,63 +337,63 @@ public class UserAction extends BaseController<User> {
 		return page_toAdd;
 	}
 
-	/**
-	 * 增加或修改
-	 * 
-	 * @param e
-	 * @param model
-	 * @param flushAttrs
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "insertOrUpdate", method = RequestMethod.POST)
-	public String insertOrUpdate(@ModelAttribute("e") User e, ModelMap model, RedirectAttributes flushAttrs)
-			throws Exception {
-		User user = (User) RequestHolder.getSession().getAttribute("manage_session_user_info");
-		if (e.getId() == 0) {// 添加
-			if (StringUtils.isBlank(e.getPassword()) || StringUtils.isBlank(e.getNewpassword2())) {
-				flushAttrs.addFlashAttribute("errorMsg", "输入的密码不符合要求！");
-				return "redirect:toEdit?id=" + e.getId();
-			}
-
-			if (!e.getPassword().equals(e.getNewpassword2())) {
-				flushAttrs.addFlashAttribute("errorMsg", "两次输入的密码不一致！");
-				return "redirect:toEdit?id=" + e.getId();
-			}
-			e.setCreateAccount(user.getUsername());
-			e.setPassword(MD5.md5(e.getPassword()));
-			getService().insert(e);
-		} else {// 修改
-			if (StringUtils.isBlank(e.getPassword()) && StringUtils.isBlank(e.getNewpassword2())) {
-				// 不修改密码
-				e.setPassword(null);
-			} else {
-				// 修改密码
-				if(StringUtils.isBlank(e.getOldPassword())){
-					flushAttrs.addFlashAttribute("errorMsg", "修改密码原始密码不能为空");
-					return "redirect:toEdit?id=" + e.getId();
-				}
-				if (!MD5.md5(e.getOldPassword()).equals(user.getPassword())) {
-					flushAttrs.addFlashAttribute("errorMsg", "原密码不正确");
-					return "redirect:toEdit?id=" + e.getId();
-				}
-				if (!e.getNewpassword().equals(e.getNewpassword2())) {
-					flushAttrs.addFlashAttribute("errorMsg", "两次输入的密码不一致！");
-					return "redirect:toEdit?id=" + e.getId();
-				}
-				e.setPassword(MD5.md5(e.getNewpassword()));
-			}
-
-			e.setUpdateAccount(user.getUsername());
-			getService().update(e);
-			if(StringUtils.isNotBlank(e.getPassword())) {
-				return page_changePwd_result ;
-			}
-		}
-		flushAttrs.addFlashAttribute("message", "操作成功!");
-		return "redirect:back";
-	}
-
+//	/**
+//	 * 增加或修改
+//	 *
+//	 * @param e
+//	 * @param model
+//	 * @param flushAttrs
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value = "insertOrUpdate", method = RequestMethod.POST)
+//	public String insertOrUpdate(@ModelAttribute("e") User e, ModelMap model, RedirectAttributes flushAttrs)
+//			throws Exception {
+//		User user = (User) RequestHolder.getSession().getAttribute("manage_session_user_info");
+//		if (e.getId() == 0) {// 添加
+//			if (StringUtils.isBlank(e.getPassword()) || StringUtils.isBlank(e.getNewpassword2())) {
+//				flushAttrs.addFlashAttribute("errorMsg", "输入的密码不符合要求！");
+//				return "redirect:toEdit?id=" + e.getId();
+//			}
+//
+//			if (!e.getPassword().equals(e.getNewpassword2())) {
+//				flushAttrs.addFlashAttribute("errorMsg", "两次输入的密码不一致！");
+//				return "redirect:toEdit?id=" + e.getId();
+//			}
+//			e.setCreateAccount(user.getUsername());
+//			e.setPassword(MD5.md5(e.getPassword()));
+//			getService().insert(e);
+//		} else {// 修改
+//			if (StringUtils.isBlank(e.getPassword()) && StringUtils.isBlank(e.getNewpassword2())) {
+//				// 不修改密码
+//				e.setPassword(null);
+//			} else {
+//				// 修改密码
+//				if(StringUtils.isBlank(e.getOldPassword())){
+//					flushAttrs.addFlashAttribute("errorMsg", "修改密码原始密码不能为空");
+//					return "redirect:toEdit?id=" + e.getId();
+//				}
+//				if (!MD5.md5(e.getOldPassword()).equals(user.getPassword())) {
+//					flushAttrs.addFlashAttribute("errorMsg", "原密码不正确");
+//					return "redirect:toEdit?id=" + e.getId();
+//				}
+//				if (!e.getNewpassword().equals(e.getNewpassword2())) {
+//					flushAttrs.addFlashAttribute("errorMsg", "两次输入的密码不一致！");
+//					return "redirect:toEdit?id=" + e.getId();
+//				}
+//				e.setPassword(MD5.md5(e.getNewpassword()));
+//			}
+//
+//			e.setUpdateAccount(user.getUsername());
+//			getService().update(e);
+//			if(StringUtils.isNotBlank(e.getPassword())) {
+//				return page_changePwd_result ;
+//			}
+//		}
+//		flushAttrs.addFlashAttribute("message", "操作成功!");
+//		return "redirect:back";
+//	}
+//
 
 
 
@@ -363,12 +407,18 @@ public class UserAction extends BaseController<User> {
 	 */
 	@RequestMapping("info")
 	public String info(@ModelAttribute("e") User e, HttpServletRequest request, ModelMap model) {
-		if (StringUtils.isBlank(request.getParameter("id"))) {
+		if (StringUtils.isBlank(request.getParameter("username"))) {
 			throw new NullPointerException("非法请求！");
 		}
-		int id = Integer.parseInt(request.getParameter("id"));
-		e.setId(id);
-		e = getService().selectOne(e);
+		String userName = request.getParameter("username");
+		e.setUsername(userName);
+		ResultMap resultMap = departmentService.selectUserByAccount(userName);
+		UserPo userPo = (UserPo) resultMap.getData();
+		//e = getService().selectOne(e);
+		e.setUsername(userPo.getAccount());
+		e.setNickname(userPo.getUserName());
+		e.setEmail(userPo.getMail());
+		e.setPortrait("attached/headPortrait/20160606/146519569961677556119.jpg");
 		model.addAttribute("e", e);
 		return page_info;
 	}

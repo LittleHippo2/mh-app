@@ -161,7 +161,14 @@ public class DepartmentController {
         return departmentService.selectCsseUserInfo(request, token, userId, account);
     }
 
+    @RequestMapping("/csse/test")
+    @ResponseBody
+    public ResultMap test(){
+        ResultMap resultMap = tokenService.getAccessToken(appid, secret);
 
-
+        JSONObject result = JSONObject.parseObject(resultMap.getData().toString());
+        String token = result.getString("access_token");
+        return departmentService.test(token);
+    }
 
 }
