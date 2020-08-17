@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.enterprise.dao.LogDao">
+    <resultMap id="LogPo" type="com.enterprise.entity.LogPo">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <id column="param" jdbcType="LONGVARCHAR" property="param" />
+        <id column="result" jdbcType="LONGVARCHAR" property="result" />
+        <id column="beginTime" jdbcType="BIGINT" property="beginTime" />
+        <id column="endTime" jdbcType="BIGINT" property="endTime" />
+        <id column="time" jdbcType="BIGINT" property="time" />
+        <id column="status" jdbcType="VARCHAR" property="status" />
+    </resultMap>
+
+    <insert id="addLog">
+		INSERT INTO t_log
+			(param, result, beginTime, endTime, time, status)
+		VALUES
+		(#{param},
+			#{result},
+			#{beginTime},
+			#{endTime},
+			#{time},
+			#{status})
+	</insert>
+</mapper>
