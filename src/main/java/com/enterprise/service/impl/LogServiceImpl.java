@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 @Service("LogService")
 public class LogServiceImpl extends ServersManage<LogPo, LogDao> implements LogService {
-    @Resource(name = "LogDao")
+    @Resource(name = "logDao")
     public void setDao(LogDao logDao) {
         this.dao = logDao;
     }

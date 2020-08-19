@@ -3,13 +3,14 @@ package com.enterprise.dao.impl;
 import com.enterprise.dao.BaseDao;
 import com.enterprise.dao.LogDao;
 import com.enterprise.entity.LogPo;
+import com.enterprise.entity.Service;
 import com.enterprise.entity.page.PageModel;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-@Repository("LogDao")
+@Repository("logDao")
 public class LogDaoImpl implements LogDao {
 
     @Resource
@@ -37,17 +38,17 @@ public class LogDaoImpl implements LogDao {
 
     @Override
     public LogPo selectOne(LogPo logPo) {
-        return null;
+        return (LogPo) dao.selectOne("logPo.selectOne",logPo);
     }
 
     @Override
     public PageModel selectPageList(LogPo logPo) {
-        return null;
+        return dao.selectPageList("logPo.selectPageList","logPo.selectPageCount",logPo);
     }
 
     @Override
     public List<LogPo> selectList(LogPo logPo) {
-        return null;
+        return dao.selectList("logPo.selectList",logPo);
     }
 
     @Override
@@ -57,6 +58,6 @@ public class LogDaoImpl implements LogDao {
 
     @Override
     public LogPo selectById(int id) {
-        return null;
+        return (LogPo) dao.selectOne("logPo.selectById",id);
     }
 }
