@@ -894,4 +894,21 @@ CREATE TABLE `timestamp`  (
 -- ----------------------------
 INSERT INTO `timestamp` VALUES (2, 1);
 
+
+-- ----------------------------
+-- Table structure for t_log
+-- ----------------------------
+DROP TABLE IF EXISTS `t_log`;
+CREATE TABLE `t_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `param` longtext NOT NULL,
+  `result` longtext NOT NULL,
+  `beginTime` bigint(20) NOT NULL,
+  `endTime` bigint(20) NOT NULL,
+  `time` bigint(20) NOT NULL,
+  `status` varchar(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
 SET FOREIGN_KEY_CHECKS = 1;
