@@ -34,7 +34,16 @@
                     <td>${item.beginTime}</td>
                     <td>${item.endTime}</td>
                     <td>${item.time}</td>
-                    <td>${item.status}</td>
+                    <c:choose>
+                        <c:when test="${item.status == 0}">
+                            <td>成功</td>
+                        </c:when>
+                        <c:when test="${item.status == 1}">
+                            <td>失败</td>
+                        </c:when>
+                    </c:choose>
+
+
                 </tr>
             </c:forEach>
             <tr>
