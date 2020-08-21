@@ -86,7 +86,7 @@ public abstract class BaseController<E extends PageModel> {
 	 */
 	@RequestMapping("toEdit")
 	public String toEdit(@ModelAttribute("e") E e , ModelMap model) throws Exception{
-		e = getService().selectOne(e);
+		//e = getService().selectOne(e);
 		model.addAttribute("e", e);
 		return page_toEdit;
 	}

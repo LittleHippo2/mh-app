@@ -74,87 +74,91 @@
     </select>
 
     <update id="updateDepartment">
+        <foreach item="item" collection="list" index="">
 		update  sys_dept
 		  set
-			`name` = #{name},
-			parent_id = #{parentId},
-			`level` = #{level},
-			order_id = #{orderId},
-			remark = #{remark},
-			operator = #{operator},
-			operator_time = #{operatorTime},
-			operator_ip = #{operatorIp},
-			type = #{type},
-			`code` = #{code},
-			`timestamp` = #{timestamp}
+			`name` = #{item.name},
+			parent_id = #{item.parentId},
+			`level` = #{item.level},
+			order_id = #{item.orderId},
+			remark = #{item.remark},
+			operator = #{item.operator},
+			operator_time = #{item.operatorTime},
+			operator_ip = #{item.operatorIp},
+			type = #{item.type},
+			`code` = #{item.code},
+			`timestamp` = #{item.timestamp}
 		  where
-		  	dept_id = #{deptId}
+		  	dept_id = #{item.deptId}
+        </foreach>
 	</update>
 
     <update id="updateUser">
+        <foreach item="item" collection="list" index="">
 			update  sys_user
 			set
-			username = #{userName},
-			telephone = #{telephone},
-			mail = #{mail},
-			`password` = #{password},
-			account = #{account},
-			remark = #{remark},
-			dep_id = #{depId},
-			`status` = #{status},
-			operator = #{operator},
-			operator_time = #{operatorTime},
-			operator_ip = #{operatorIp},
-			is_manager = #{isManager},
-			order_id = #{orderId},
-			`timestamp` = #{timestamp}
+			username = #{item.userName},
+			telephone = #{item.telephone},
+			mail = #{item.mail},
+			`password` = #{item.password},
+			account = #{item.account},
+			remark = #{item.remark},
+			dep_id = #{item.depId},
+			`status` = #{item.status},
+			operator = #{item.operator},
+			operator_time = #{item.operatorTime},
+			operator_ip = #{item.operatorIp},
+			is_manager = #{item.isManager},
+			order_id = #{item.orderId},
+			`timestamp` = #{item.timestamp}
 			where
-			user_id = #{userId}
+			user_id = #{item.userId}
+        </foreach>
 	</update>
 
-    <!--<insert id="insertDepartment">-->
-    <!--INSERT INTO sys_dept-->
-    <!--(id, name, parent_id, level, order_id, remark, operator, operator_time, operator_ip, type, `code`, `timestamp`)-->
-    <!--VALUES-->
-    <!--<foreach item="item" collection="list" separator="," open="(" close=")" index="">-->
-    <!--(#{id},-->
-    <!--#{name},-->
-    <!--#{parentId},-->
-    <!--#{level},-->
-    <!--#{orderId},-->
-    <!--#{remark},-->
-    <!--#{operator},-->
-    <!--#{operatorTime},-->
-    <!--#{operatorIp},-->
-    <!--#{type},-->
-    <!--#{code},-->
-    <!--#{timestamp})-->
-    <!--</foreach>-->
-    <!--</insert>-->
+    <insert id="insertDepartment">
+    INSERT INTO sys_dept
+    (dept_id, name, parent_id, level, order_id, remark, operator, operator_time, operator_ip, type, `code`, `timestamp`)
+    VALUES
+    <foreach item="item" collection="list" separator=","  index="index">
+	(#{item.deptId},
+    #{item.name},
+    #{item.parentId},
+    #{item.level},
+    #{item.orderId},
+    #{item.remark},
+    #{item.operator},
+    #{item.operatorTime},
+    #{item.operatorIp},
+    #{item.type},
+    #{item.code},
+    #{item.timestamp})
+    </foreach>
+    </insert>
 
-    <!--<insert id="insertUser">-->
-    <!--INSERT INTO sys_user-->
-    <!--(id, username, telephone, mail, `password`, account, remark, dep_id, `status`, operator, operator_time, operator_ip, is_manager, order_id, `timestamp`)-->
-    <!--VALUES-->
-    <!--<foreach item="item" collection="list" separator="," open="(" close=")" index="">-->
-    <!--(#{id},-->
-    <!--#{userName},-->
-    <!--#{telephone},-->
-    <!--#{mail},-->
-    <!--#{password},-->
-    <!--#{account},-->
-    <!--#{remark},-->
-    <!--#{depId},-->
-    <!--#{status},-->
-    <!--#{operator},-->
-    <!--#{operatorTime},-->
-    <!--#{operatorIp},-->
-    <!--#{isManager},-->
-    <!--#{orderId},-->
-    <!--#{timestamp})-->
-    <!--</foreach>-->
+    <insert id="insertUser">
+    INSERT INTO sys_user
+    (user_id, username, telephone, mail, `password`, account, remark, dep_id, `status`, operator, operator_time, operator_ip, is_manager, order_id, `timestamp`)
+    VALUES
+    <foreach item="item" collection="list" separator=","  index="">
+    (#{item.userId},
+    #{item.userName},
+    #{item.telephone},
+    #{item.mail},
+    #{item.password},
+    #{item.account},
+    #{item.remark},
+    #{item.depId},
+    #{item.status},
+    #{item.operator},
+    #{item.operatorTime},
+    #{item.operatorIp},
+    #{item.isManager},
+    #{item.orderId},
+    #{item.timestamp})
+    </foreach>
 
-    <!--</insert>-->
+    </insert>
 
     <insert id="insertDeptByOne">
 		INSERT INTO sys_dept
@@ -205,5 +209,18 @@
 		TRUNCATE table sys_dept;
 		TRUNCATE table sys_user;
 	</select>
+
+	<insert id="insertTUser" parameterType="com.enterprise.entity.User">
+		INSERT INTO t_user
+		(username,`password`,createtime,updatetime,createAccount,updateAccount,nickname,email,portrait)
+		VALUES
+        <foreach item="item" collection="list" separator=","  index="">
+		(#{item.username},#{item.password},NOW(), NOW(),#{item.createAccount}, #{item.updateAccount},#{item.nickname}, #{item.email}, #{item.portrait})
+        </foreach>
+	</insert>
+
+    <select id="selectUserByAccount" resultMap="UserBaseResultMap">
+        select * from sys_user where account = #{_parameter}
+    </select>
 
 </mapper>

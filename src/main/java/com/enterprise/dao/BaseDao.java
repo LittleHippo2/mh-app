@@ -94,8 +94,10 @@ public class BaseDao extends SqlSessionDaoSupport{
 		int row = session.insert(str,obj);
 		if(row ==1){
 			return ((PageModel)obj).getId();
+		}else{
+			return row;
 		}
-		throw new IbatisException();
+		//throw new IbatisException();
 	}
 	/**
 	 * 更新

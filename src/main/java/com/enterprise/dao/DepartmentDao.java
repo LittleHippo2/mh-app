@@ -1,5 +1,6 @@
 package com.enterprise.dao;
 
+import com.enterprise.entity.User;
 import com.enterprise.entity.department.DepartmentPo;
 import com.enterprise.entity.department.PageUtils;
 import com.enterprise.entity.department.UserPo;
@@ -24,13 +25,13 @@ public interface DepartmentDao extends DaoManage<DepartmentPo> {
 
     List<DepartmentPo> selectDeptList();
 
-    void updateDepartment(DepartmentPo departmentPo);
+    void updateDepartment(@Param("list")List<DepartmentPo> list);
 
-    void updateUser( UserPo userPo);
+    void updateUser( @Param("list")List<UserPo> list);
 
-//    Integer insertDepartment(@Param("list") List<DepartmentPo> list);
-//
-//    Integer insertUser(@Param("list") List<UserPo> list);
+    void insertDepartment(@Param("list") List<DepartmentPo> list);
+
+    void insertUser(@Param("list") List<UserPo> list);
 
     void insertDeptByOne( DepartmentPo departmentPo);
 
@@ -43,6 +44,11 @@ public interface DepartmentDao extends DaoManage<DepartmentPo> {
     void updateTimestamp(@Param("timestamp") Long timestamp);
 
     void truncateTable();
+
+    //向user表中插入数据
+    void insertTUser(@Param("list")List<User> list);
+
+    UserPo selectUserByAccount(String account);
 
 
 

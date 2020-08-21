@@ -37,12 +37,16 @@
         <property name="order" value="0"/>
     </bean>
 
-	<!-- 定义事务管理器 -->
+
+	<!-- 添加事务管理器组件DataSourceTransactionManager -->
 	<bean id="transactionManager"
 		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
+		<!-- 使用set方法注入数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	<!--使用注释事务 -->
-	<tx:annotation-driven  transaction-manager="transactionManager" />
+
+	<!-- 开启基于注解声明式事务 注意配置transaction-manager属性，它引用了我们事务管理组件对象，这里要和事务管理器组件id一致
+        默认是transactionManager -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
 </beans>

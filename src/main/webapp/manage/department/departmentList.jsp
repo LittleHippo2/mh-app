@@ -49,6 +49,11 @@
 
         renderTable();
 
+        var loading = layer.load(0, {
+            shade: false,
+            time: 2*1000
+        });
+
         // to_page();
         function renderTable(id) {
             table.render({
@@ -83,16 +88,25 @@
                 }
             });
         }
+        var loadingFlag;
         function syncData(){
             $.ajax({
                 url:"/manage/department/sync",
                 data:{
                     token:"e48bf7d1-9d6d-4460-b37f-101e641309ea"
                 },
+                beforeSend: function (XMLHttpRequest) {
+                    //注意，layer.msg默认3秒自动关闭，如果数据加载耗时比较长，需要设置time
+                    loadingFlag= layer.msg('正在读取数据，请稍候……', { icon: 16, shade: 0.01,shadeClose:false,time:60000 });
+                },
                 success:function (res) {
+                    layer.close(loadingFlag);
                     console.log(res)
                     renderTable();
                     alert(res.data);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.close(loadingFlag);
                 }
             })
         }

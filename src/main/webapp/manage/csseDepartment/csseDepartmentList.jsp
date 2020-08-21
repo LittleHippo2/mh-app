@@ -60,7 +60,7 @@
                 , url: '/manage/department/csse/selectDeptListInfo' //数据接口
                 ,toolbar: true //开启头部工具栏，并为其绑定左侧模板
                 , where: {
-                    token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
+                    token:"e48bf7d1-9d6d",
                     fatherId: id
                 }
                 , parseData: function (res) {
@@ -107,7 +107,7 @@
                 $.ajax({
                     url:"/manage/department/selectDeptByDeptId",
                     data:{
-                        token:"e48bf7d1-9d6d-4460-b37f-101e641309ea",
+                        token:"e48bf7d1-9d6d",
                         deptId:data.deptId,
                     },
                     success:function(res){

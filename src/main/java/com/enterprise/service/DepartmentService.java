@@ -28,4 +28,8 @@ public interface DepartmentService extends Services<DepartmentPo> {
     void truncateTable();
 
     void updateTime(Long time);
+
+    ResultMap test(String token);
+
+    ResultMap selectUserByAccount(String account);
 }
