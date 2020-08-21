@@ -25,4 +25,41 @@
 			#{time},
 			#{status})
 	</insert>
+
+    <select id="logPo.selectPageList" parameterType="com.enterprise.entity.LogPo" resultType="com.enterprise.entity.LogPo">
+        select * from t_log  where 1=1
+        <if test="param!=null and param!=''">
+            and param like "%"#{param}"%"
+        </if>
+        order by id DESC
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="logPo.selectPageCount" parameterType="com.enterprise.entity.LogPo" resultType="java.lang.Integer">
+        select count(*) from t_log where 1=1
+        <if test="param!=null and param!=''">
+            and param like "%"#{param}"%"
+        </if>
+    </select>
+
+    <select id="logPo.selectOne" parameterType="com.enterprise.entity.LogPo" resultType="com.enterprise.entity.LogPo">
+        select * from t_log where 1=1
+        <if test="id!=0">
+            and id=#{id}
+        </if>
+        <if test="param!=null and param!=''">
+            and param=#{param}
+        </if>
+<!--        <if test="status!=null and status!=''">-->
+<!--            and status=#{status}-->
+<!--        </if>-->
+    </select>
+
+    <select id="logPo.selectList" parameterType="com.enterprise.entity.LogPo" resultType="com.enterprise.entity.LogPo">
+        select * from t_log
+        order by id DESC
+    </select>
+    <select id="logPo.selectById" parameterType="int" resultType="com.enterprise.entity.LogPo">
+        select * from t_log where 1=1 and id=#{id}
+    </select>
 </mapper>
