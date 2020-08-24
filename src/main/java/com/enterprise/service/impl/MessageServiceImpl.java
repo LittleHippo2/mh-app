@@ -18,4 +18,5 @@ public class MessageServiceImpl extends ServersManage<Messages, MessageDao> impl
 		this.dao = dao;
 	}
 
+
 }

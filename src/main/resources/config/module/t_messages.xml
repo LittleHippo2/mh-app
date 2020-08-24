@@ -11,9 +11,9 @@
 		<if test="gender!='' and gender!=null">
 		 	and gender=#{gender}
 		</if>
-		<if test="state!='' and state!=null">
+
 			and state=#{state}
-		</if>
+
 		order by id desc
 		limit #{offset},#{pageSize}
 	</select>
@@ -24,9 +24,9 @@
 		<if test="gender!='' and gender!=null">
 		 	and gender=#{gender}
 		</if>
-		<if test="state!='' and state!=null">
+
 			and state=#{state}
-		</if>
+
 	</select>
 	<insert id="message.insert"
 		parameterType="com.enterprise.entity.Messages"
@@ -111,5 +111,18 @@
 	</select>
 	<select id="message.selectById" parameterType="int" resultType="com.enterprise.entity.Messages">
 	 select * from t_messages  where 1=1 and id=#{id}
+	</select>
+	<select id="message.selectList"
+			parameterType="com.enterprise.entity.Messages"
+			resultType="com.enterprise.entity.Messages">
+		select * from t_messages  where 1=1
+		<if test="gender!='' and gender!=null">
+			and gender=#{gender}
+		</if>
+
+		and state=#{state}
+
+		order by id desc
+		limit #{offset},#{pageSize}
 	</select>
 </mapper>

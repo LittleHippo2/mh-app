@@ -110,7 +110,9 @@
     <img src="<%=path%>/resource/images/ok.png" style="width: 30px;vertical-align:middle;margin-top: -3px;">留言成功!
 </div>
 <script>
+
     function leaveMessage(){
+
         var _url=" <%=path%>/message/leaveMessage";
         if($("#title").val()!='' && $("#name").val()!='' && $("#tel").val()!='' && $("#email").val()!='' && $("#content").val()!='') {
             $.ajax({

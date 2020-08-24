@@ -23,6 +23,11 @@
             <%=getServletInfo()%>
 
         </h3>
+        <input type="hidden" id="backlohId"> <a
+            href="/manage/message/selectList?state=0"><span>未读留言
+				</span></a>&nbsp;|&nbsp;&nbsp;<a href="/manage/message/selectList?state=1"><span>已读留言
+				</span></a>&nbsp;
+        <br><br>
         <table class="table table-bordered table-hover table-striped" >
             <tr >
                 <th width="10%">标题</th>
@@ -31,8 +36,8 @@
                 <th width="4%">性别</th>
                 <th width="12%">电子邮箱</th>
                 <th width="13%">留言时间</th>
-                <th width="40%">留言内容</th>
-                <th width="5%">操作</th>
+                <th width="35%">留言内容</th>
+                <th width="10%">操作</th>
             </tr>
             <c:forEach var="item" items="${pager.list}">
                 <tr>
@@ -54,7 +59,15 @@
                     <td>${item.email}</td>
                     <td>${item.leavetime}</td>
                     <td title="${item.content}">${item.content}</td>
-                    <td><a href="toEdit?id=${item.id}">查看</a></td>
+                    <c:choose>
+                        <c:when test="${item.state==0}">
+                            <td><a href="update?id=${item.id}&state=1">标为已读</a>&nbsp;&nbsp;<a href="toEdit?id=${item.id}&state=1">查看</a></td>
+                        </c:when>
+                        <c:when test="${item.state==1}">
+                            <td><a href="toEdit?id=${item.id}">查看</a></td>
+                        </c:when>
+                    </c:choose>
+
                 </tr>
             </c:forEach>
             <tr>

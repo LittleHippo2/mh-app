@@ -17,6 +17,7 @@ public class PageModel implements CleanBean{
 	private int recordsTotal;	//记录总数
 	private int recordsFiltered;	//记录过滤
 
+
 	
 
 	public int getTotal() {
@@ -126,7 +127,6 @@ public class PageModel implements CleanBean{
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
-
 
 
 	@Override

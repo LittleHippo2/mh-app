@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ include file="/manage/system/pageBase.jsp" %>
-<%@ page info="平台维护组织机构信息" %>
+<%@ page info="平台维护组织机构" %>
 <style>
 
 </style>

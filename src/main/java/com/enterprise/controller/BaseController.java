@@ -1,19 +1,29 @@
 package com.enterprise.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSONObject;
+import com.enterprise.entity.MenuItem;
+import com.enterprise.entity.User;
+import com.enterprise.util.HttpUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.enterprise.service.Services;
 import com.enterprise.core.SystemManage;
 import com.enterprise.entity.page.PageModel;
 import com.enterprise.util.RequestHolder;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 抽象控制类
  * @author Cesiumai
@@ -21,7 +31,13 @@ import com.enterprise.util.RequestHolder;
  * @param <E>
  */
 public abstract class BaseController<E extends PageModel> {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	@Value("#{config['api.ip']}")
+	private String apiIp;
+
+	@Value("#{config['api.sso.user']}")
+	private String ssoUserUrl;
 	protected String page_toList = null;
 	protected String page_toEdit = null;
 	protected String page_toAdd = null;
@@ -49,7 +65,7 @@ public abstract class BaseController<E extends PageModel> {
 	 * @throws Exception
 	 */
 	@RequestMapping("selectList")
-	public String selectList(HttpServletRequest request,@ModelAttribute("e") E e) throws Exception{
+	public String selectList(HttpServletRequest request, @ModelAttribute("e") E e) throws Exception{
 		this.initPageSelect();
 		setParamWhenInitQuery(e);
 		int offset = 0;
@@ -67,7 +83,31 @@ public abstract class BaseController<E extends PageModel> {
 		page.setPagerSize((page.getTotal() + page.getPageSize() - 1)
 	                / page.getPageSize());
 		selectListAfter(page);
+		String access_token = (String) request.getAttribute("access_token");
+		HttpSession session = request.getSession();
 		request.setAttribute("pager", page);
+		if (access_token !=null) {
+			String url = apiIp + ssoUserUrl;
+			Map inParam = new HashMap<String, Object>();
+			inParam.put("access_token", access_token);
+
+			String result = HttpUtil.post(url, inParam, 3000, 3000);
+			JSONObject result2 = JSONObject.parseObject(result);
+
+			if (!"操作成功".equals(result2.getString("rsltmsg"))){
+				logger.error(result2.toString());
+				return "404.jsp";
+			}
+			User user = new User();
+
+			user.setUsername(result2.getString("account"));
+			user.setNickname(result2.getString("fullname"));
+			user.setEmail("root@root.com");
+
+			session.setAttribute("manage_session_user_info", user);
+
+
+		}
 		return page_toList;
 	}
 	/**
@@ -87,7 +127,13 @@ public abstract class BaseController<E extends PageModel> {
 	@RequestMapping("toEdit")
 	public String toEdit(@ModelAttribute("e") E e , ModelMap model) throws Exception{
 		//e = getService().selectOne(e);
+
+		getService().update(e);
+		e = getService().selectOne(e);
+
+
 		model.addAttribute("e", e);
+
 		return page_toEdit;
 	}
 	/**
@@ -159,7 +205,7 @@ public abstract class BaseController<E extends PageModel> {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "update", method = RequestMethod.POST)
+	@RequestMapping("update")
     public String update(HttpServletRequest request, @ModelAttribute("e") E e, RedirectAttributes flushAttrs) throws Exception {
 
         getService().update(e);
