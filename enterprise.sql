@@ -243,6 +243,7 @@ INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`
 INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (120, 6, '/manage/department/csse/selectList', '平台维护组织机构', 12, 'page', NULL);
 INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (121, 6, '/manage/department/user/selectList', '应用维护人员信息', 11, 'page', NULL);
 INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (122, 6, '/manage/department/csse/user/selectList', '平台维护人员信息', 13, 'page', NULL);
+INSERT INTO `enterprise`.`t_menu`(`id`, `pid`, `url`, `name`, `orderNum`, `type`, `icon`) VALUES (123, 6, '/manage/log/selectList', '日志', '14', 'page', NULL);
 -- ----------------------------
 -- Table structure for t_messages
 -- ----------------------------
